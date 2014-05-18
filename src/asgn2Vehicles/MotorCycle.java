@@ -20,9 +20,6 @@ import asgn2Exceptions.VehicleException;
  *
  */
 public class MotorCycle extends Vehicle {
-
-	private String vehID;
-	private int arrivalTime;
 	/**
 	 * MotorCycle constructor 
 	 * @param vehID - identification number or plate of the vehicle
@@ -30,14 +27,17 @@ public class MotorCycle extends Vehicle {
 	 *        either queued or given entry to the carpark 
 	 * @throws VehicleException if arrivalTime is <= 0  
 	 */
+	
 	public MotorCycle(String vehID, int arrivalTime) throws VehicleException 
 	{
+		//If Arrival time is not strictly positive
 		if(arrivalTime <= 0)
 		{
 			throw new VehicleException("Vehicle Exception: Arrival Time is not strictly positive. Motor Cycle was not created.");
 		}
 		else
 		{
+			//Assign Vehicle parameters
 			this.vehID = vehID;
 			this.arrivalTime = arrivalTime;
 		}

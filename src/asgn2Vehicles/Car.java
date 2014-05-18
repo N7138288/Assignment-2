@@ -24,8 +24,6 @@ import asgn2Exceptions.VehicleException;
 public class Car extends Vehicle {
 	
 	private boolean small;
-	private String vehID;
-	private int arrivalTime;
 
 	/**
 	 * The Car Constructor - small set at creation, not mutable. 
@@ -37,12 +35,14 @@ public class Car extends Vehicle {
 	 */
 	public Car(String vehID, int arrivalTime, boolean small) throws VehicleException 
 	{
+		//If arrival time is not strictly positive
 		if(arrivalTime <= 0)
 		{
 			throw new VehicleException("Vehicle Exception: Arrival Time is not strictly positive. Car was not created.");
 		}
 		else
 		{
+			//Assign Vehicle Parameters, as well as the small parameter
 			this.vehID = vehID;
 			this.small = small;
 			this.arrivalTime = arrivalTime;
