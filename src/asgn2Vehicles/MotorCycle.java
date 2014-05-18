@@ -30,8 +30,16 @@ public class MotorCycle extends Vehicle {
 	 *        either queued or given entry to the carpark 
 	 * @throws VehicleException if arrivalTime is <= 0  
 	 */
-	public MotorCycle(String vehID, int arrivalTime) throws VehicleException {
-		this.vehID = vehID;
-		this.arrivalTime = arrivalTime;
+	public MotorCycle(String vehID, int arrivalTime) throws VehicleException 
+	{
+		if(arrivalTime <= 0)
+		{
+			throw new VehicleException("Vehicle Exception: Arrival Time is not strictly positive. Motor Cycle was not created.");
+		}
+		else
+		{
+			this.vehID = vehID;
+			this.arrivalTime = arrivalTime;
+		}
 	}
 }

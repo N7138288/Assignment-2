@@ -37,9 +37,16 @@ public class Car extends Vehicle {
 	 */
 	public Car(String vehID, int arrivalTime, boolean small) throws VehicleException 
 	{
-		this.vehID = vehID;
-		this.small = small;
-		this.arrivalTime = arrivalTime;
+		if(arrivalTime <= 0)
+		{
+			throw new VehicleException("Vehicle Exception: Arrival Time is not strictly positive. Car was not created.");
+		}
+		else
+		{
+			this.vehID = vehID;
+			this.small = small;
+			this.arrivalTime = arrivalTime;
+		}
 	}
 
 	/**

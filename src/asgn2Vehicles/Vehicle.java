@@ -44,31 +44,28 @@ import asgn2Simulators.Constants;
  */
 public abstract class Vehicle {
 	
-	//String form of the Vehicle ID
+	//String representation of a vehicle's ID. Should be, but not enforced, unique.
 	String vehID;
 	
-	//Time the vehicle arrives to enter the queue.
+	//TIMES:
+	//The time the vehicle arrives into the queue.
 	int arrivalTime;
 	
-	//whether the vehicle is in a parked state.
-	private boolean parked;
-	//Whether the vehicle is in a queued state.
-	private boolean queued;
-	
-	//Time the vehicle enters a parked state.
 	private int parkingTime;
-	//Time the vehicle plans to be in the parked state.
-	private int intendedDuration;
-	//Expected time of departure: parkingTime + intededDuration.
+	
 	private int departureTime;
-	//
+	
 	private int exitTime;
 	
-	//Flag for whether the vehicle has ever parked before.
+	private int intendedDuration; //The intended duration the vehicle is to stay after parking.
+	private boolean parked;
 	private boolean everParked = false;
-	//Flag for whether the vehicle has ever queued before.
+	
+	
+	private boolean queued;
 	private boolean everQueued = false;
-
+	
+	
 	
 	/**
 	 * Vehicle Constructor 
@@ -78,18 +75,14 @@ public abstract class Vehicle {
 	 * @throws VehicleException if arrivalTime is <= 0 
 	 */
 	public Vehicle(String vehID,int arrivalTime) throws VehicleException  {
-		//Check for valid arrival time.
+		//If Arrival Time is not strictly positive
 		if (arrivalTime <= 0)
 		{
-			//Throw an Exception
-			//Throw an Exception
-			//Throw an Exception
-			//Throw an Exception
-			//Throw an Exception
+			throw new VehicleException("Vehicle Exception: Arrival Time is not strictly positive. Vehicle was not created.");
 		}
 		else
 		{
-			//Set vehID, arrivalTime.
+			//Set Vehicle Parameters
 			this.vehID = vehID;
 			this.arrivalTime = arrivalTime;
 		}
@@ -105,41 +98,35 @@ public abstract class Vehicle {
 	 *         or if intendedDuration is less than the minimum prescribed in asgnSimulators.Constants
 	 */
 	public void enterParkedState(int parkingTime, int intendedDuration) throws VehicleException {
-		//Throw an Exception if vehicle is already in a parked or queued state.
+		boolean correctState = true;
+		
+		//If not in correct state.
 		if ((parked == true) || (queued == true))
 		{
-			//Throw an Exception
-			//Throw an Exception
-			//Throw an Exception
-			//Throw an Exception
-			//Throw an Exception
+			correctState = false;
+			throw new VehicleException("Not in Correct state (required state: parked = queued = false). Vehicle has not entered parked state.");
 		}
-		//Throw an Exception if vehicle's intended duration is less then the minimum stay.
+		//If intendedDuration is less then the minimum stay.
 		if (intendedDuration <= Constants.MINIMUM_STAY)
 		{
-			//Throw an Exception
-			//Throw an Exception
-			//Throw an Exception
-			//Throw an Exception
-			//Throw an Exception
+			correctState = false;
+			throw new VehicleException("Vehicle Exception: Intended Duration less then the minimum stay. Vehicle has not entered parked state.");
 		}
-		//Throw an Exception if parking time is not greater then zero.
+		//If parking time is strictly negative.
 		if (parkingTime < 0)
 		{
-			//Throw an Exception
-			//Throw an Exception
-			//Throw an Exception
-			//Throw an Exception
-			//Throw an Exception
+			correctState = false;
+			throw new VehicleException("Vehicle Exception: Parking Time less then zero. Vehicle has not entered parked state.");
 		}
-		else
+		//If passed all exception tests:
+		if (correctState)
 		{
-			//Set flag to say this vehicle has parked before.
+			//Set the fact this vehicle has parked before to true.
 			if (!everParked)
 			{
 				everParked = true;
 			}
-			//Set parked parkingTime, intendedDuration, departureTime.
+			//Set parking parameters
 			parked = true;
 			this.parkingTime = parkingTime;
 			this.intendedDuration = intendedDuration;
@@ -153,23 +140,21 @@ public abstract class Vehicle {
 	 * @throws VehicleException if the vehicle is already in a queued or parked state
 	 */
 	public void enterQueuedState() throws VehicleException {
-		//Throw an exception if the vehicle is already parked or queued.
+		//If not in correct state
 		if ((parked) || (queued))
 		{
-			//Throw an Exception
-			//Throw an Exception
-			//Throw an Exception
-			//Throw an Exception
-			//Throw an Exception
+			throw new VehicleException("Vehicle Exception: Not in Correct state (required state: parked = queued = false). Vehicle has not entered queued state.");
 		}
-			//Set flag to say this vehicle has queued before.
+		else
+		{
+			//Set that the vehicle has queued before.
 			if (!everQueued)
 			{
 				everQueued = true;
 			}
-			
-			//Set queued to true.
+			//Set queued parameters
 			queued = true;
+		}
 	}
 	
 	/**
@@ -179,22 +164,28 @@ public abstract class Vehicle {
 	 * 		  state or if the revised departureTime < parkingTime
 	 */
 	public void exitParkedState(int departureTime) throws VehicleException {
-		//Throw an exception if the vehicle is not parked, or in the queue.
-		if ((queued) || (!parked))
+		boolean correctState = true;
+		//If vehicle is queued:
+		if (queued)
 		{
-			//Throw an Exception
-			//Throw an Exception
-			//Throw an Exception
-			//Throw an Exception
-			//Throw an Exception
+			correctState = false;
+			throw new VehicleException("Vehicle Exception: Not in Correct state (currently queued). Vehicle has not exited the parked state.");
 		}
-		//Throw an exception if the departure time given is less then the parking time 
-		if (departureTime < parkingTime + intendedDuration)
+		if (!parked)
 		{
-			
+			correctState = false;
+			throw new VehicleException("Vehicle Exception: Not in Correct state (currently not parked). Vehicle has not exited the parked state.");
 		}
-		parked = false;
-		this.departureTime = departureTime;
+		if (departureTime < parkingTime)
+		{
+			throw new VehicleException("Vehicle Exception: The departure time is before the time the vehicle parked. Vehicle has exited the parked state.");
+		}
+		if (correctState)
+		{
+			//Set parked parameters
+			parked = false;
+			this.departureTime = departureTime;
+		}
 	}
 
 	/**
@@ -214,7 +205,7 @@ public abstract class Vehicle {
 		{
 			
 		}
-		else if (exitTime <= arrivalTime)
+		else if (exitTime < arrivalTime)
 		{
 			
 		}
@@ -300,7 +291,7 @@ public abstract class Vehicle {
 	 * @return true if vehicle was or is in a parked state, false otherwise 
 	 */
 	public boolean wasParked() {
-		return everParked;
+		return false;
 	}
 
 	/**
@@ -308,6 +299,6 @@ public abstract class Vehicle {
 	 * @return true if vehicle was or is in a queued state, false otherwise 
 	 */
 	public boolean wasQueued() {
-		return everQueued;
+		return false;
 	}
 }

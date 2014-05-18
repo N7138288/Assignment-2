@@ -43,26 +43,14 @@ import asgn2Vehicles.Vehicle;
 public class CarPark {
 	
 	//Parameter Setup
-	//The maximum amount of cars the carpark can hold.
 	private int maxCarSpaces; //Mandatory
-	
-	//The amount of maxCarSpaces assigned to small cars, but can be used by motor cycles.
 	private int maxSmallCarSpaces; //Mandatory
-	
-	
-	//The amount of maxCarSpaces assigned to just motor cycles.
 	private int maxMotorCycleSpaces; //Mandatory
-	
-	//The maximum size of the queue.
 	private int maxQueueSize; //Mandatory
 	
-	//Total amount of cars in the system combined (queued, parked, archived).
-	//Increment this when a car is queued, and never decrease it.
 	private int count; //Mandatory
 	
-	//The number of cars that were dissatisfied: 
-	//Ones that couldn't enter the queue because it was full.
-	//Ones that couldn't park in time once in the queue.
+
 	private int numDissatisfied; //Mandatory
 
 
@@ -75,8 +63,6 @@ public class CarPark {
 	
 	//Spaces in the carpark: smallSpots + motorCycleSpots + NormalSpots = spaces.size();
 	private List<Vehicle> spaces = new ArrayList<Vehicle>(); //Mandatory
-	//Type of Space used by car in carpark:
-	private List<String> spacesType = new ArrayList<String>();
 	//Value for cars in small car parks
 	private int smallSpots;
 	//Value for cars in motorCycleSpots;
@@ -84,20 +70,15 @@ public class CarPark {
 	//Value for cars in normal spots;
 	private int normalSpots;
 	
-	//Number of CARS in the car park, including small cars.
+	private List<String> typeSpaces;
+	
 	private int numCars; //Mandatory
-	//Number of Normal Cars in the Car Park.
-	private int numNormalCars; 
-	//Number of Motor Cycles in the Car Park.
 	private int numMotorCycles; //Mandatory
-	//Number of Small Cars in the Car Park.
 	private int numSmallCars; //Mandatory
 	
 	//Archive:
 	private List<Vehicle> past = new ArrayList<Vehicle>();
-	//Number of Cars in the Archives.
 	private int numArchives;
-
 	
 	
 	/**
@@ -134,8 +115,7 @@ public class CarPark {
 	 */
 	public void archiveDepartingVehicles(int time,boolean force) throws VehicleException, SimulationException 
 	{
-		past.set(numArchives, time);
-		numArchives += 1;
+		
 	}
 		
 	/**
@@ -146,9 +126,7 @@ public class CarPark {
 	 */
 	public void archiveNewVehicle(Vehicle v) throws SimulationException 
 	{
-		past.add(v);
-		this.numDissatisfied += 1;
-		this.numArchives += 1;
+		
 	}
 	
 	/**
@@ -158,11 +136,7 @@ public class CarPark {
 	 */
 	public void archiveQueueFailures(int time) throws VehicleException 
 	{
-		this.queue.get(0).exitQueuedState(time);
-		past.set(numArchives, this.queue.get(0));
-		numArchives += 1;
-		numDissatisfied += 1;
-		this.queue.remove(0);
+		
 	}
 	
 	/**
@@ -179,7 +153,7 @@ public class CarPark {
 	 * @return true if car park full, false otherwise
 	 */
 	public boolean carParkFull() {
-		return (spaces.size() == this.maxCarSpaces);
+		return (spaces.size() == this.maxSmallCarSpaces);
 	}
 	
 	/**
@@ -191,23 +165,16 @@ public class CarPark {
 	 * @throws VehicleException if vehicle not in the correct state 
 	 */
 	public void enterQueue(Vehicle v) throws SimulationException, VehicleException {
+		//If Queue is full
 		if (this.queueFull())
 		{
-			//Throw an Exception
-			//Throw an Exception
-			//Throw an Exception
-			//Throw an Exception
-			//Throw an Exception
-			
-			//Increment Count?
-			count += 1;
-			//archiveNewVehicles?
-			this.archiveNewVehicle(v);
+			//Throw Exception
+			throw new SimulationException("Simuation Exception: Queue is full: Will not add vehicle to queue.");
 		}
-		else
+		else //If queue is not full
 		{
 			v.enterQueuedState();
-			this.queue.add(v);
+			this.queue.set(numQueue, v);
 			numQueue += 1;
 			count += 1;
 		}
@@ -224,18 +191,24 @@ public class CarPark {
 	 * constraints are violated
 	 */
 	public void exitQueue(Vehicle v,int exitTime) throws SimulationException, VehicleException {
-			int loop = 0;
-			while (loop != this.maxQueueSize)
+		//Loop counter: for each vehicle in queue:
+		int loop = 0;
+		while (loop != this.maxQueueSize)
+		{
+			//If the vehicle trying to leave is in queue
+			if (queue.get(loop) == v) //loop
 			{
-				if (queue.get(loop) == v) //loop
-				{
-					v.exitQueuedState(exitTime);
-					queue.remove(loop);
-					numQueue -= 1;
-					loop = maxQueueSize - 1;
-				}
-				loop += 1;
-			}			
+				//Remove Queued Status
+				v.exitQueuedState(exitTime);
+				//Remove from Queue
+				queue.remove(loop);
+				//Break the While Loop
+				loop = this.maxQueueSize-1;
+				//Adjust count
+				numQueue -= 1;
+			}
+			loop += 1;
+		}			
 	}
 	
 	/**
@@ -334,6 +307,7 @@ public class CarPark {
 	 * @return number of vehicles in the queue
 	 */
 	public int numVehiclesInQueue() {
+		//return number of vehicles in queue
 		return this.numQueue;
 	}
 	
@@ -347,135 +321,94 @@ public class CarPark {
 	 * @throws SimulationException if no suitable spaces are available for parking 
 	 * @throws VehicleException if vehicle not in the correct state or timing constraints are violated
 	 */
-	public void parkVehicle(Vehicle v, int time, int intendedDuration) throws SimulationException, VehicleException 
-	{
-		//If the vehicle is a motorcycle.
-		if (v instanceof MotorCycle)
+	public void parkVehicle(Vehicle v, int time, int intendedDuration) throws SimulationException, VehicleException {
+		if (v.getClass() == asgn2Vehicles.MotorCycle.class) //If the vehicle is a Motor Cycle
 		{
-			//If there are no motorcycle spots left.
+			//If there are no Motor Cycle Spots Remaining
 			if (this.motorCycleSpots == this.maxMotorCycleSpaces)
 			{
-				//If there are no small spots left.
+				//If there are no Small Car Spots Remaining
 				if (this.smallSpots == this.maxSmallCarSpaces)
 				{
-					//If there are no normal spots left.
+					//If there are no Normal Car Sports Remaining
 					if (this.normalSpots == this.maxCarSpaces)
 					{
-						//Throw me
-						//Throw me
-						//Throw me
-						//Throw me
-						//Throw me
+						//Throw Exception: No Spaces available
+						throw new SimulationException("Simulation Exception: There are no car parks available for a motor cycle.");
 					}
-					else
+					else //If there are Normal Car Spots Remaining
 					{
-						//Add to car park in a normal spot.
+						//Add to Normal Car Park Spots.
 						spaces.add(v);
-						//Add type of spot to list.
-						spacesType.add("N");
-						//Increment Motor Cycle counter.
+						typeSpaces.add("N");
+						this.normalSpots += 1;
 						this.numMotorCycles += 1;
-						
-						//Increment Normal Spots counter.
-						this.normalSpots += 1;
 					}
 				}
-				else
+				else //If there are Small Car Park Spots Remaining
 				{
-					//Add to car park in a normal spot.
+					//Add to Small Car Park Spots.
 					spaces.add(v);
-					//Add type of spot to list.
-					spacesType.add("S");
-					//Increment Motor Cycle counter.
+					typeSpaces.add("S");
+					this.smallSpots += 1;
 					this.numMotorCycles += 1;
-					
-					//Increment Small Spots counter.
-					this.smallSpots += 1;
 				}
 			}
-			else
+			else //If there are Motor Cycle Park Spots Remaining
 			{
-				//Add to car park in a normal spot.
+				//Add to Motor Cycle Park Spots.
 				spaces.add(v);
-				//Add type of spot to list.
-				spacesType.add("M");
-				//Increment Motor Cycle counter.
-				this.numMotorCycles += 1;
-				
-				//Increment Motor Cycle Spots counter.
+				typeSpaces.add("M");
 				this.motorCycleSpots += 1;
+				this.numMotorCycles += 1;
 			}
-		} //Else if the vehicle is a car:
-		else if (v instanceof Car)
+		}
+		else if (v.isSmall()) //If the car is a small car
 		{
-			//If the car is small:
-			if (((Car) v).isSmall())
+			//If there are no Small Car Park Spots Remaning
+			if (this.smallSpots == this.maxSmallCarSpaces)
 			{
-				//If there are no small spots left.
-				if (this.smallSpots == this.maxSmallCarSpaces)
-				{
-					//If there are no normal spots left.
-					if (this.normalSpots == this.maxCarSpaces)
-					{
-						//Throw me
-						//Throw me
-						//Throw me
-						//Throw me
-						//Throw me
-					}
-					else
-					{
-						//Add to car park in a normal spot.
-						spaces.add(v);
-						//Add type of spot to list.
-						spacesType.add("N");
-						//Increment Small Cars counter.
-						this.numSmallCars += 1;
-						this.numCars += 1;
-						
-						//Increment Normal Spots counter.
-						this.normalSpots += 1;
-					}
-				}
-				else
-				{
-					//Add to car park in a small spot.
-					spaces.add(v);
-					//Add type of spot to list.
-					spacesType.add("S");
-					//Increment Small Cars counter.
-					this.numSmallCars += 1;
-					this.numCars += 1;
-					
-					//Increment SmallSpots counter.
-					this.smallSpots += 1;
-				}
-			}
-			//Otherwise the car must be normal.
-			else
-			{
-				//If there are no normal spots left.
+				//If there are no Normal Car Park Spots Remaining
 				if (this.normalSpots == this.maxCarSpaces)
 				{
-					//Throw me
-					//Throw me
-					//Throw me
-					//Throw me
-					//Throw me
+					//Throw Exception: No Spaces available
+					throw new SimulationException("Simulation Exception: There are no car parks available for a small car.");
 				}
-				else
+				else //If there are Normal Car Park Spots Remaining
 				{
-					//Add to car park in a small spot.
+					//Add to Normal Car Park Spots.
 					spaces.add(v);
-					//Add type of spot to list.
-					spacesType.add("N");
-					//Increment Small Cars counter.
-					this.numNormalCars += 1;
-					this.numCars += 1;
-					
-					//Increment SmallSpots counter.
+					typeSpaces.add("N");
 					this.normalSpots += 1;
+					this.numSmallCars += 1;
+					this.numCars += 1;
 				}
+			}
+			else
+			{
+				//Add to Small Car Park Spots.
+				spaces.add(v);
+				typeSpaces.add("S");
+				this.smallSpots += 1;
+				this.numSmallCars += 1;
+				this.numCars += 1;
+			}
+		}
+		else //If the car is a normal car
+		{
+			//If there are no Normal Car Park Spots Remaining
+			if (this.normalSpots == this.maxCarSpaces)
+			{
+				//Throw Exception: No Spaces available
+				throw new SimulationException("Simulation Exception: There are no car parks available for a normal car.");
+			}
+			else
+			{
+				//Add to Normal Car Park Spots.
+				spaces.add(v);
+				typeSpaces.add("N");
+				this.normalSpots += 1;
+				this.numCars += 1;
 			}
 		}
 	}
@@ -498,14 +431,8 @@ public class CarPark {
 	 * @return true if queue empty, false otherwise
 	 */
 	public boolean queueEmpty() {
-		if (this.numQueue == 0)
-		{
-			return true;
-		}
-		else
-		{
-			return false;
-		}
+		//If the size of the queue is zero: return true, otherwise return false
+		return queue.isEmpty();
 	}
 
 	/**
@@ -513,6 +440,7 @@ public class CarPark {
 	 * @return true if queue full, false otherwise
 	 */
 	public boolean queueFull() {
+		//If cars in queue = to max Queue Size: return true, otherwise return false
 		if (this.numQueue == this.maxQueueSize)
 		{
 			return true;
@@ -529,47 +457,44 @@ public class CarPark {
 	 * @param v Vehicle to be stored. 
 	 * @return true if space available for v, false otherwise 
 	 */
-	public boolean spacesAvailable(Vehicle v) {
-		if (v instanceof MotorCycle)
+	public boolean spacesAvailable(Vehicle v) 
+	{
+		//If the vehicle is a motorcycle:
+		if (v.getClass() == asgn2Vehicles.MotorCycle.class)
 		{
-			if (this.maxCarSpaces < numCars)
-			{
-				return true;
-			}
-			else
+			//If there are no spots left:
+			if (motorCycleSpots + smallSpots + normalSpots == maxCarSpaces)
 			{
 				return false;
 			}
-		}
-		else if (v instanceof Car)
-		{
-			if (((Car) v).isSmall())
+			else //If there are spots left:
 			{
-				if (this.smallSpots + this.normalSpots < this.maxCarSpaces - this.maxMotorCycleSpaces)
-				{
-					return true;
-				}
-				else
-				{
-					return false;
-				}
-			}
-			else
-			{
-				if (this.normalSpots < this.maxCarSpaces - this.maxMotorCycleSpaces - this.maxSmallCarSpaces)
-				{
-					return true;
-				}
-				else
-				{
-					return false;
-				}
+				return true;
 			}
 		}
-		else
+		else if (v.isSmall()) //If the vehicle is a small car
 		{
-			//Throw Exception
-			return false;
+			//If there are no spots left:
+			if (smallSpots + normalSpots == maxCarSpaces - maxMotorCycleSpaces)
+			{
+				return false;
+			}
+			else //If there are spots left:
+			{
+				return true;
+			}
+		}
+		else //If the vehicle is a normal car
+		{
+			//If there are no spots left:
+			if (normalSpots == maxCarSpaces - maxMotorCycleSpaces - maxSmallCarSpaces)
+			{
+				return false;
+			}
+			else //If there are spots left:
+			{
+				return true;
+			}
 		}
 	}
 
@@ -600,9 +525,7 @@ public class CarPark {
 	 * @throws VehicleException if Vehicle is not parked, is in a queue, or violates timing constraints 
 	 * @throws SimulationException if vehicle is not in car park
 	 */
-	public void unparkVehicle(Vehicle v,int departureTime) throws VehicleException, SimulationException 
-	{
-		
+	public void unparkVehicle(Vehicle v,int departureTime) throws VehicleException, SimulationException {
 	}
 	
 	/**
