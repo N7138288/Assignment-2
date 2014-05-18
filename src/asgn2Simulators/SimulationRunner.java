@@ -92,7 +92,24 @@ public class SimulationRunner {
 		}
 		
 		//TODO: Implement Argument Processing 
-		
+		//Task 3: allow command line components: All or Nothing.
+		//Step 1: Zero Arguments - not required
+		//Step 2: Ten Arguments
+		if (args.length == 10)
+		{
+			//Step 3: Populate the Fields:
+			//1
+			//2
+			//3
+			//4
+			//5
+			//6
+			//7
+			//8
+			//9
+			//10
+			
+		}
 		//Run the simulation 
 		SimulationRunner sr = new SimulationRunner(cp,s,l);
 		try {

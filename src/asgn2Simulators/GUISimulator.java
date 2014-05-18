@@ -36,7 +36,12 @@ public class GUISimulator extends JFrame implements Runnable {
 	@Override
 	public void run() {
 		// TODO Auto-generated method stub
-
+		
+		//Create and set up the window
+		//JFrame frame = new JFrame("test");
+		//frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		
+		
 	}
 
 	/**
