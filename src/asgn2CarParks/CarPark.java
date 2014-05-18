@@ -115,7 +115,23 @@ public class CarPark {
 	 */
 	public void archiveDepartingVehicles(int time,boolean force) throws VehicleException, SimulationException 
 	{
-		
+		for (int index = 0; index != spaces.size(); index++)
+		{
+			if ((force) || (spaces.get(index).getDepartureTime() <= time))
+			{
+				//Vehicle leaves parked state
+				spaces.get(index).exitQueuedState(time);
+				
+				//Vehicle added to archives
+				past.add(spaces.get(index));
+				
+				//Vehicle removed from park
+				spaces.remove(index);
+				
+				//Archives incremented
+				numArchives += 1;
+			}
+		}
 	}
 		
 	/**
@@ -126,7 +142,23 @@ public class CarPark {
 	 */
 	public void archiveNewVehicle(Vehicle v) throws SimulationException 
 	{
+		//If vehicle is currently parked
+		if (v.isParked())
+		{
+			//Throw exception
+			throw new SimulationException("Simulation Exception: Vehicle is currently parked. This function is for vehicles that don't get parked or queued. Vehicle is archived.");
+		}
+		//If vehicle is currently queued
+		if (v.isQueued())
+		{
+			//Throw exception
+			throw new SimulationException("Simulation Exception: Vehicle is currently queued. This function is for vehicles that don't get parked or queued. Vehicle is archived.");
+		}
+		//Add vehicle to archive
+		past.add(v);
 		
+		//Archives Incremented
+		numArchives += 1;
 	}
 	
 	/**
@@ -136,7 +168,24 @@ public class CarPark {
 	 */
 	public void archiveQueueFailures(int time) throws VehicleException 
 	{
-		
+		//With no vehicles being inputted here, I'm guessing this is the solution?
+		for (int index = 0; index != queue.size(); index++)
+		{
+			if (time - queue.get(index).getArrivalTime() >= asgn2Simulators.Constants.MAXIMUM_QUEUE_TIME)
+			{
+				//Vehicle leaves queue state
+				queue.get(index).exitQueuedState(time);
+				
+				//Vehicle added to archives
+				past.add(queue.get(index));
+				
+				//Vehicle removed from queue
+				queue.remove(index);
+				
+				//Archives incremented
+				numArchives += 1;
+			}
+		}
 	}
 	
 	/**
@@ -363,7 +412,7 @@ public class CarPark {
 				this.numMotorCycles += 1;
 			}
 		}
-		else if (v.isSmall()) //If the car is a small car
+		else if (((Car) v).isSmall()) //If the car is a small car
 		{
 			//If there are no Small Car Park Spots Remaning
 			if (this.smallSpots == this.maxSmallCarSpaces)
@@ -472,7 +521,7 @@ public class CarPark {
 				return true;
 			}
 		}
-		else if (v.isSmall()) //If the vehicle is a small car
+		else if (((Car) v).isSmall()) //If the vehicle is a small car
 		{
 			//If there are no spots left:
 			if (smallSpots + normalSpots == maxCarSpaces - maxMotorCycleSpaces)
@@ -526,6 +575,21 @@ public class CarPark {
 	 * @throws SimulationException if vehicle is not in car park
 	 */
 	public void unparkVehicle(Vehicle v,int departureTime) throws VehicleException, SimulationException {
+		boolean inPark = false;
+		for (int index = 0; index != spaces.size(); index++)
+		{
+			if (spaces.get(index).getVehID() == v.getVehID())
+			{
+				//Vehicle is found in park
+				inPark = true;
+				//Vehicle leaves parked state
+				v.exitParkedState(departureTime);
+			}
+		}
+		if (!inPark)
+		{
+			throw new SimulationException("Simulation Exception: Vehicle not found in car park. Vehicle not removed from car park.");
+		}
 	}
 	
 	/**
