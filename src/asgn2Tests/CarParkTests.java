@@ -15,12 +15,21 @@ import static org.junit.Assert.*;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
+import asgn2CarParks.CarPark;
+import asgn2Exceptions.SimulationException;
+import asgn2Vehicles.Car;
+import asgn2Vehicles.MotorCycle;
 
 /**
  * @author hogan
  *
  */
 public class CarParkTests {
+	
+	CarPark testCarPark;
+	Car carTest;
+	MotorCycle bikeTest;
+	
 
 	/**
 	 * @throws java.lang.Exception
@@ -39,6 +48,39 @@ public class CarParkTests {
 	/**
 	 * Test method for {@link asgn2CarParks.CarPark#archiveDepartingVehicles(int, boolean)}.
 	 */
+	
+	@Test (expected=SimulationException.class )
+	public void negSetupMaxCarSpaces() throws SimulationException {
+		testCarPark = new CarPark(-1,50,50,50);
+	}
+	
+	@Test (expected=SimulationException.class )
+	public void negSetupMaxSmallCarSpaces() throws SimulationException {
+		testCarPark = new CarPark(50,-1,50,50);
+	}
+	
+	@Test (expected=SimulationException.class )
+	public void negSetupMaxMotorCycleSpaces() throws SimulationException {
+		testCarPark = new CarPark(50,50,-1,50);
+	}
+	
+	@Test (expected=SimulationException.class )
+	public void negSetupMaxQueueSize() throws SimulationException {
+		testCarPark = new CarPark(50,50,50,-1);
+	}
+	
+	@Test (expected=SimulationException.class )
+	public void archiveNewVehicleParked() throws SimulationException {
+		carTest.setParked();
+		testCarPark.archiveNewVehicle(carTest);
+	}
+	
+	@Test (expected=SimulationException.class )
+	public void archiveNewVehicleQueued() throws SimulationException {
+		carTest.setQueued();
+		testCarPark.archiveNewVehicle(carTest);
+	}
+	
 	@Test
 	public void testArchiveDepartingVehicles() {
 		fail("Not yet implemented"); // TODO

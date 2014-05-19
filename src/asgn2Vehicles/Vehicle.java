@@ -334,4 +334,14 @@ public abstract class Vehicle {
 	public boolean wasQueued() {
 		return everQueued;
 	}
+	
+	//Method for setting parked variable for testing
+	public void setParked() {
+		parked = true;
+	}
+	
+	//Method for setting queued vehicle for testing
+	public void setQueued() {
+		queued = true;
+	}
 }
