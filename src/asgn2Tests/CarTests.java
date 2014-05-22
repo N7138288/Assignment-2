@@ -18,7 +18,6 @@ import org.junit.Test;
 
 import asgn2Exceptions.VehicleException;
 import asgn2Vehicles.Car;
-import asgn2Vehicles.MotorCycle;
 
 /**
  * @author hogan

@@ -18,7 +18,6 @@ import org.junit.Test;
 
 import asgn2Exceptions.VehicleException;
 import asgn2Vehicles.MotorCycle;
-import asgn2Vehicles.Vehicle;
 
 /**
  * @author hogan
@@ -63,7 +62,7 @@ public class MotorCycleTests {
 		assertEquals(testBike.getArrivalTime(), 50);
 	}
 	
-	@Test(expected = VehicleException.class)
+	@Test
 	public void notParkedCreation() throws VehicleException {
 		testBike = new MotorCycle("111AAA", 50);
 		assertFalse(testBike.isParked());

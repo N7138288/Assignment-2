@@ -239,24 +239,32 @@ public class CarPark {
 	 * @throws VehicleException if the vehicle is in an incorrect state or timing 
 	 * constraints are violated
 	 */
+	//In a post to fb I think Jim said that we only can park the vehicle at the front of the queue. IE
+	//we can't loop through the queue to see if we can park one of the cars
+	//What do you think?
 	public void exitQueue(Vehicle v,int exitTime) throws SimulationException, VehicleException {
-		//Loop counter: for each vehicle in queue:
-		int loop = 0;
-		while (loop != this.maxQueueSize)
-		{
-			//If the vehicle trying to leave is in queue
-			if (queue.get(loop) == v) //loop
+		
+		if (!v.isQueued()) {
+			throw new SimulationException("Simuation Exception: Vehicle is not in a queue.");
+		} else {
+			//Loop counter: for each vehicle in queue:
+			int loop = 0;
+			while (loop != this.maxQueueSize)
 			{
-				//Remove Queued Status
-				v.exitQueuedState(exitTime);
-				//Remove from Queue
-				queue.remove(loop);
-				//Break the While Loop
-				loop = this.maxQueueSize-1;
-				//Adjust count
-				numQueue -= 1;
+				//If the vehicle trying to leave is in queue
+				if (queue.get(loop) == v) //loop
+				{
+					//Remove Queued Status
+					v.exitQueuedState(exitTime);
+					//Remove from Queue
+					queue.remove(loop);
+					//Break the While Loop
+					loop = this.maxQueueSize-1;
+					//Adjust count
+					numQueue -= 1;
+				}
+				loop += 1;
 			}
-			loop += 1;
 		}			
 	}
 	
