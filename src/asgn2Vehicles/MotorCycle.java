@@ -9,7 +9,6 @@
  * 
  */
 package asgn2Vehicles;
-
 import asgn2Exceptions.VehicleException;
 
 /**
@@ -30,14 +29,12 @@ public class MotorCycle extends Vehicle {
 	
 	public MotorCycle(String vehID, int arrivalTime) throws VehicleException 
 	{
-		//If Arrival time is not strictly positive
-		if(arrivalTime <= 0)
+		if(arrivalTime <= 0) //If Arrival time is not strictly positive: throw an exception.
 		{
 			throw new VehicleException("Vehicle Exception: Arrival Time is not strictly positive. Motor Cycle was not created.");
 		}
-		else
+		else //Assign Vehicle parameters
 		{
-			//Assign Vehicle parameters
 			this.vehID = vehID;
 			this.arrivalTime = arrivalTime;
 		}
