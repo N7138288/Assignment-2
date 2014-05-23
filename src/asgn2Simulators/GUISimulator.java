@@ -71,6 +71,7 @@ public abstract class GUISimulator extends JFrame implements Runnable, ActionLis
 	 */
 	public GUISimulator(String arg0) throws HeadlessException {
 		//super(arg0);
+		initialiseComponents();
 	}
 
 	/* (non-Javadoc)
