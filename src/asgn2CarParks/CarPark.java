@@ -49,8 +49,8 @@ public class CarPark
 	private int maxQueueSize; //The maximum amount of vehicles allowable in the queue.
 	
 	//Parameter Setup: Counting Parameters
-	private int count; //Total number of vehicles to have entered the system ever.
-	private int numDissatisfied; //The number of vehicles to have been: turned away because queue is full OR turned away because waited in queue too long.
+	private int count = 0; //Total number of vehicles to have entered the system ever.
+	private int numDissatisfied = 0; //The number of vehicles to have been: turned away because queue is full OR turned away because waited in queue too long.
 	private int numQueue = 0; //The number of vehicles currently in the queue.
 	private int normalSpots = 0; //The number of vehicles currently parked in normal car spots.
 	private int smallSpots = 0; //The number of vehicles currently parked in small car spots.
@@ -153,6 +153,7 @@ public class CarPark
 				queue.remove(index); //Vehicle is removed from the list of cars queued.
 				index -= 1; //Prevents skipping indices after removal in list.
 				numQueue -= 1;
+				numDissatisfied += 1; //Number of Dissatisfied vehicles is incremented.
 			}
 		}
 	}
