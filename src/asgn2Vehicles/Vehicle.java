@@ -297,13 +297,4 @@ public abstract class Vehicle
 		return everQueued;
 	}
 	
-	//Method for setting parked variable for testing
-	public void setParked() {
-		parked = true;
-	}
-	
-	//Method for setting queued vehicle for testing
-	public void setQueued() {
-		queued = true;
-	}
 }

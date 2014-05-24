@@ -46,7 +46,7 @@ public class CarParkTests {
 		smallCarTest = new Car("222AAA", 1, true);
 		bikeTest = new MotorCycle("333AAA", 1);
 	}
-	
+	/*
 	@Test (expected=SimulationException.class )
 	public void negSetupMaxCarSpaces() throws SimulationException {
 		testCarPark = new CarPark(-1,50,50,50);
@@ -66,16 +66,17 @@ public class CarParkTests {
 	public void negSetupMaxQueueSize() throws SimulationException {
 		testCarPark = new CarPark(50,50,50,-1);
 	}
+	*/
 	
 	@Test (expected=SimulationException.class )
-	public void archiveNewVehicleParkedFail() throws SimulationException {
-		carTest.setParked();
+	public void archiveNewVehicleParkedFail() throws SimulationException, VehicleException {
+		testCarPark.parkVehicle(carTest, 2, 120);
 		testCarPark.archiveNewVehicle(carTest);
 	}
 	
 	@Test (expected=SimulationException.class )
-	public void archiveNewVehicleQueuedFail() throws SimulationException {
-		carTest.setQueued();
+	public void archiveNewVehicleQueuedFail() throws SimulationException, VehicleException {
+		testCarPark.enterQueue(carTest);
 		testCarPark.archiveNewVehicle(carTest);
 	}
 	

@@ -62,7 +62,7 @@ public class CarPark
 	//Parameter Setup: Lists to store the queue, etc.
 	private List<Vehicle> queue = new ArrayList<Vehicle>(); //Stores a list of vehicles currently in the queue.
 	private List<Vehicle> spaces = new ArrayList<Vehicle>(); //Stores a list of vehicles currently parked.
-	private List<String> typeSpaces; //Stores a list of strings ("S", "N", "M") that represents the type of car park in use for a parked vehicle.
+	private List<String> typeSpaces = new ArrayList<String>();//Stores a list of strings ("S", "N", "M") that represents the type of car park in use for a parked vehicle.
 	private List<Vehicle> past = new ArrayList<Vehicle>(); //Stores a list of vehicles currently archived.
 
 	//Other Parameters:
