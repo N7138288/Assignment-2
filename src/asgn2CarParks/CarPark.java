@@ -102,7 +102,7 @@ public class CarPark
 	 */
 	public void archiveDepartingVehicles(int time,boolean force) throws VehicleException, SimulationException 
 	{
-		for (int index = 0; index != spaces.size() - 1; index++)
+		for (int index = 0; index != spaces.size(); index++)
 		{
 			//If forced to leave car park, or if departure time is less or equal to the current time:
 			if ((force) || (spaces.get(index).getDepartureTime() <= time))
@@ -143,7 +143,7 @@ public class CarPark
 	public void archiveQueueFailures(int time) throws VehicleException 
 	{
 		//With no vehicles being inputted here, I'm guessing this is the solution?
-		for (int index = 0; index != queue.size() - 1; index++) //For vehicle currently in the queue.
+		for (int index = 0; index != queue.size(); index++) //For vehicle currently in the queue.
 		{
 			//If the vehicle has been in the queue too long.
 			if (time - queue.get(index).getArrivalTime() >= asgn2Simulators.Constants.MAXIMUM_QUEUE_TIME) 
@@ -222,15 +222,14 @@ public class CarPark
 		}
 		else //Otherwise:
 		{
-			for (int loop = 0; loop != maxQueueSize-1; loop++) //For each vehicle in the queue.
+			for (int loop = 0; loop != queue.size(); loop++) //For each vehicle in the queue.
 			{
 				if (queue.get(loop) == v) //If the vehicle trying to leave is found in the queue.
 				{
 					v.exitQueuedState(exitTime); //Vehicle exits the queued state.
 					queue.remove(loop); //Vehicle is removed from the list of queued vehicles.
-					loop = this.maxQueueSize-1; //Change the loop value to break the for loop.
+					loop = queue.size() - 1; //Change the loop value to break the for loop.
 					numQueue -= 1; //The number of vehicles in queue is decremented.
-					loop -= 1; //decrement loop coutner to prevent index out of range
 				}
 			}
 		}			
@@ -360,7 +359,7 @@ public class CarPark
 					v.enterParkedState(time, intendedDuration);
 					spaces.add(v); //Add motor cycle to list of parked vehicles.
 					typeSpaces.add("S"); //Add small spot to list of used spots.
-					motorCycleSpots += 1; //Increment number of motor cycles spots used.
+					smallSpots += 1; //Increment number of motor cycles spots used.
 					numMotorCycles += 1; //Increment number of motor cycles parked.
 				}
 			}
@@ -578,7 +577,7 @@ public class CarPark
 	*/
 	public void unparkVehicle(Vehicle v,int departureTime) throws VehicleException, SimulationException {
 		boolean inPark = false; //Flag to say vehicle was found in car park.
-		for (int index = 0; index != spaces.size() - 1; index++) //For vehicle in car park:
+		for (int index = 0; index != spaces.size(); index++) //For vehicle in car park:
 		{
 			if (spaces.get(index).getVehID() == v.getVehID()) //If parked vehicle is vehicle to remove from car park:
 			{
