@@ -110,6 +110,7 @@ public class SimulationRunner {
 			//10
 			
 		}
+		
 		//Run the simulation 
 		SimulationRunner sr = new SimulationRunner(cp,s,l);
 		try {

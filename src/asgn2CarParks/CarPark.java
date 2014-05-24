@@ -415,7 +415,24 @@ public class CarPark
 	 * @throws VehicleException if state is incorrect, or timing constraints are violated
 	 */
 	public void processQueue(int time, Simulator sim) throws VehicleException, SimulationException {
+		//No vehicles that have been in the queue too long are in this function
+		boolean block = false;
 		
+		while (block == false)
+		{
+			if (queue.isEmpty())
+			{
+				block = true;
+			}
+			else if (spacesAvailable(queue.get(0)) == false)
+			{
+				block = true;
+			}
+			else
+			{
+				exitQueue(queue.get(0), time);
+			}
+		}
 	}
 
 	/**
