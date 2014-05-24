@@ -90,6 +90,9 @@ public abstract class Vehicle
 	 * @throws VehicleException if the vehicle is already in a parked or queued state, if parkingTime < 0, 
 	 *         or if intendedDuration is less than the minimum prescribed in asgnSimulators.Constants
 	 */
+	
+	//There is an error with this, it is not setting the car's state to parked
+	//Can't figure it out/am too tired
 	public void enterParkedState(int parkingTime, int intendedDuration) throws VehicleException {
 		boolean correctState = true; //Boolean used to determine if vehicle will exit queued state despite exceptions.
 		if ((parked) || (queued)) //If incorrect state: parked or false.

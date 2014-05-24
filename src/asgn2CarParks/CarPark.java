@@ -421,6 +421,8 @@ public class CarPark
 	 * @throws SimulationException if no suitable spaces available when parking attempted
 	 * @throws VehicleException if state is incorrect, or timing constraints are violated
 	 */
+	
+	//This method or one it calls needs to set the vehicle to parked
 	public void processQueue(int time, Simulator sim) throws VehicleException, SimulationException {
 		//No vehicles that have been in the queue too long are in this function
 		boolean block = false;
@@ -507,6 +509,11 @@ public class CarPark
 	 * @throws VehicleException if Vehicle is not parked, is in a queue, or violates timing constraints 
 	 * @throws SimulationException if vehicle is not in car park
 	 */
+	
+	/*problem with the way you implemented inPark variable
+	 * it is meant to throw a vehicle exception if it is queued or not parked or violates time constraints
+	 * It throws simulation exception if the vehicle is not in car park
+	*/
 	public void unparkVehicle(Vehicle v,int departureTime) throws VehicleException, SimulationException {
 		boolean inPark = false; //Flag to say vehicle was found in car park.
 		for (int index = 0; index != spaces.size(); index++) //For vehicle in car park:
@@ -549,6 +556,10 @@ public class CarPark
 		if (!inPark) //If vehicle not found in car park: throw an exception.
 		{
 			throw new SimulationException("Simulation Exception: Vehicle not found in car park. Vehicle not removed from car park.");
+		}
+		if (v.isQueued())
+		{
+			throw new VehicleException("Vehicle Exception: Vehicle is queued. Vehicle not removed from car park.");
 		}
 	}
 	

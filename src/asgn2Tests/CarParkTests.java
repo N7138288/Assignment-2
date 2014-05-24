@@ -97,16 +97,19 @@ public class CarParkTests {
 	public void checkCarParkAddition() throws SimulationException, VehicleException {
 		testCarPark.enterQueue(carTest);
 		testCarPark.enterQueue(smallCarTest);
-		testCarPark.parkVehicle(carTest, 2, 120);
-		testCarPark.parkVehicle(smallCarTest, 2, 120);
+		testCarPark.processQueue(5, testSim);
+		testCarPark.processQueue(6, testSim);
+		//testCarPark.parkVehicle(carTest, 2, 120);
+		//testCarPark.parkVehicle(smallCarTest, 2, 120);
 		assertEquals(testCarPark.getNumCars(), 2);
 	}	
 	
 	@Test
 	public void checkCarParks() throws SimulationException, VehicleException {
 		testCarPark.enterQueue(carTest);
-		testCarPark.parkVehicle(carTest, 2, 120);
-		assertFalse(carTest.isParked());
+		testCarPark.processQueue(110, testSim);
+		//testCarPark.parkVehicle(carTest, 2, 120);
+		assertTrue(carTest.isParked());
 	}	
 	
 	@Test
@@ -192,7 +195,7 @@ public class CarParkTests {
 	public void testSpacesAvailable() throws SimulationException, VehicleException {
 		testCarPark = new CarPark(50,50,50,2);
 		testCarPark.enterQueue(carTest);
-		assertEquals(testCarPark.spacesAvailable(carTest), 1);
+		assertTrue(testCarPark.spacesAvailable(carTest));
 	}
 
 
