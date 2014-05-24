@@ -39,4 +39,15 @@ public class MotorCycle extends Vehicle {
 			this.arrivalTime = arrivalTime;
 		}
 	}
+	/* (non-Javadoc)
+	 * @see asgn2Vehicles.Vehicle#toString()
+	 */
+	@Override
+	public String toString() 
+	{
+		return "Vehicle: Motor Cycle | vehID: " + this.vehID + " | Arrival Time: "
+				+ this.getArrivalTime() + " | Exit Time: " + this.getExitTime() + " | Parking Time: " 
+				+ this.getParkingTime()	+ " | Departure Time: " + this.getDepartureTime()
+				+ " | Satisfied: " + this.isSatisfied();
+	}
 }

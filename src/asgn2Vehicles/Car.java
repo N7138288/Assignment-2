@@ -58,7 +58,11 @@ public class Car extends Vehicle {
 	 * @see asgn2Vehicles.Vehicle#toString()
 	 */
 	@Override
-	public String toString() {
-		return null;
+	public String toString() 
+	{
+		return "Vehicle: Car | vehID: " + this.vehID + " | Small: " + (this.small) + " | Arrival Time: "
+				+ this.getArrivalTime() + " | Exit Time: " + this.getExitTime() + " | Parking Time: " 
+				+ this.getParkingTime()	+ " | Departure Time: " + this.getDepartureTime()
+				+ " | Satisfied: " + this.isSatisfied();
 	}
 }

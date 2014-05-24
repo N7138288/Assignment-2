@@ -107,9 +107,9 @@ public class CarPark
 			//If forced to leave car park, or if departure time is less or equal to the current time:
 			if ((force) || (spaces.get(index).getDepartureTime() <= time))
 			{
-				spaces.get(index).exitParkedState(time); //Vehicle leaves the parked state.
-				past.add(spaces.get(index)); //Vehicle is added to the list of archives.
-				spaces.remove(index); //Vehicle is removed from the list of cars parked.
+				past.add(spaces.get(index));
+				unparkVehicle(past.get(past.size() - 1), time);
+				index -= 1; //Prevents skipping indices after removal in list.
 			}
 		}
 	}
@@ -148,9 +148,10 @@ public class CarPark
 			//If the vehicle has been in the queue too long.
 			if (time - queue.get(index).getArrivalTime() >= asgn2Simulators.Constants.MAXIMUM_QUEUE_TIME) 
 			{
-				queue.get(index).exitQueuedState(time); //Vehicle leaves the queue state.
-				past.add(queue.get(index)); //Vehicle is added to the list of archives
+				past.add(queue.get(index));
+				past.get(past.size()-1).exitQueuedState(time);
 				queue.remove(index); //Vehicle is removed from the list of cars queued.
+				index -= 1; //Prevents skipping indices after removal in list.
 				numQueue -= 1;
 			}
 		}
@@ -229,6 +230,7 @@ public class CarPark
 					queue.remove(loop); //Vehicle is removed from the list of queued vehicles.
 					loop = this.maxQueueSize-1; //Change the loop value to break the for loop.
 					numQueue -= 1; //The number of vehicles in queue is decremented.
+					loop -= 1; //decrement loop coutner to prevent index out of range
 				}
 			}
 		}			
@@ -441,7 +443,7 @@ public class CarPark
 			{
 				block = true;
 			}
-			else
+			else if (block == false)
 			{
 				Vehicle v = queue.get(0); //Catch vehicle so can enter the car park after leaving queue
 				exitQueue(v, time);
@@ -523,7 +525,7 @@ public class CarPark
 		}
 		if (sim.smallCarTrial())
 		{
-			Car smallCar = new Car("VehID", time, true);
+			Car smallCar = new Car(Integer.toString(count), time, true);
 			if (spacesAvailable(smallCar))
 			{
 				parkVehicle(smallCar, time, sim.setDuration());
@@ -540,7 +542,7 @@ public class CarPark
 		}
 		if (sim.motorCycleTrial())
 		{
-			MotorCycle motorCycle = new MotorCycle("VehID", time);
+			MotorCycle motorCycle = new MotorCycle(Integer.toString(count), time);
 			if (spacesAvailable(motorCycle))
 			{
 				parkVehicle(motorCycle, time, sim.setDuration());
@@ -606,6 +608,7 @@ public class CarPark
 				v.exitParkedState(departureTime); //Vehicle is removed from the list of vehicles parked.
 				spaces.remove(index);
 				typeSpaces.remove(index);
+				index -= 1; //Prevents skipping indices after removal in list.
 			}
 		}
 		if (!inPark) //If vehicle not found in car park: throw an exception.

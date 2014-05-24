@@ -102,7 +102,7 @@ public abstract class Vehicle
 			correctState = false;
 			throw new VehicleException("Not in Correct state (required state: parked = queued = false). Vehicle has not entered parked state.");
 		}
-		if (intendedDuration <= Constants.MINIMUM_STAY) //If intendedDuration is less then the minimum stay: throw an exception.
+		if (intendedDuration < Constants.MINIMUM_STAY) //If intendedDuration is less then the minimum stay: throw an exception.
 		{
 			correctState = false;
 			throw new VehicleException("Vehicle Exception: Intended Duration less then the minimum stay. Vehicle has not entered parked state.");
@@ -157,7 +157,7 @@ public abstract class Vehicle
 			correctState = false;
 			throw new VehicleException("Vehicle Exception: Not in Correct state (currently queued). Vehicle has not exited the parked state.");
 		}
-		if (!parked) //If the vehicle is not in a parked state: throw an exception.
+		if (parked == false) //If the vehicle is not in a parked state: throw an exception.
 		{
 			correctState = false;
 			throw new VehicleException("Vehicle Exception: Not in Correct state (currently not parked). Vehicle has not exited the parked state.");
@@ -212,6 +212,10 @@ public abstract class Vehicle
 		return arrivalTime;
 	}
 	
+	//I made this, not part of spec
+	public int getExitTime() {
+		return exitTime;
+	}
 	/**
 	 * Simple getter for the departure time from the car park
 	 * Note: result may be 0 before parking, show intended departure 
