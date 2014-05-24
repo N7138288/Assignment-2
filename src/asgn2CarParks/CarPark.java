@@ -352,6 +352,7 @@ public class CarPark
 				}
 				else //If there are small car park spots remaining: add motor cycle to small car park spots.
 				{
+					v.enterParkedState(time, intendedDuration);
 					spaces.add(v); //Add motor cycle to list of parked vehicles.
 					typeSpaces.add("S"); //Add small spot to list of used spots.
 					motorCycleSpots += 1; //Increment number of motor cycles spots used.
@@ -360,6 +361,7 @@ public class CarPark
 			}
 			else //If there are motor cycle spots remaining: add motor cycle to motor cycle spots.
 			{
+				v.enterParkedState(time, intendedDuration);
 				spaces.add(v); //Add motor cycle to list of parked vehicles.
 				typeSpaces.add("M"); //Add motor cycle spot to list of used spots.
 				motorCycleSpots += 1; //Increment number of motor cycles spots used.
@@ -376,6 +378,7 @@ public class CarPark
 				}
 				else //If there are normal car park spots remaining: add small car to normal car park spots.
 				{
+					v.enterParkedState(time, intendedDuration);
 					spaces.add(v); //Add motor cycle to list of parked vehicles.
 					typeSpaces.add("N"); //Add normal car spot to list of used spots.
 					normalSpots += 1; //Increment number of normal spots used.
@@ -385,6 +388,7 @@ public class CarPark
 			}
 			else //If there are small car spots remaining: add small car to small car spots.
 			{
+				v.enterParkedState(time, intendedDuration);
 				spaces.add(v); //Add small car to list of parked vehicles.
 				typeSpaces.add("S"); //Add small car spot to list of used spots.
 				smallSpots += 1; //Increment number of small car spots used.
@@ -400,6 +404,7 @@ public class CarPark
 			}
 			else //If there are normal car park spots remaining: add normal car to normal car park spots.
 			{
+				v.enterParkedState(time, intendedDuration);
 				spaces.add(v); //Add normal car to list of parked vehicles.
 				typeSpaces.add("N"); //Add normal car spot to list of used spots.
 				normalSpots += 1; //Increment number of normal cars spots used.
@@ -508,8 +513,37 @@ public class CarPark
 		{
 			if (spaces.get(index).getVehID() == v.getVehID()) //If parked vehicle is vehicle to remove from car park:
 			{
+				if (v.getClass() == asgn2Vehicles.MotorCycle.class) //If the vehicle is a motor cycle:
+				{
+					numMotorCycles -= 1;
+				}
+				else if (((Car) v).isSmall()) //If the vehicle is a small car:
+				{
+					numSmallCars -= 1;
+					numCars -= 1;
+				}
+				else
+				{
+					numCars -= 1;
+				}
+				
+				if (typeSpaces.get(index) == "M")
+				{
+					motorCycleSpots -= 1;
+				}
+				else if (typeSpaces.get(index) == "S")
+				{
+					smallSpots -= 1;
+				}
+				else if (typeSpaces.get(index) == "N")
+				{
+					normalSpots -= 1;
+				}
+				
 				inPark = true; //Set found flag.
 				v.exitParkedState(departureTime); //Vehicle is removed from the list of vehicles parked.
+				spaces.remove(index);
+				typeSpaces.remove(index);
 			}
 		}
 		if (!inPark) //If vehicle not found in car park: throw an exception.
