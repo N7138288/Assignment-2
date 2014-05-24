@@ -66,7 +66,7 @@ public class CarPark
 	private List<Vehicle> past = new ArrayList<Vehicle>(); //Stores a list of vehicles currently archived.
 
 	//Other Parameters:
-	private String status;
+	private String status = "";
 	
 	/**
 	 * CarPark constructor sets the basic size parameters. 
@@ -508,38 +508,42 @@ public class CarPark
 	public void tryProcessNewVehicles(int time,Simulator sim) throws VehicleException, SimulationException {
 		if (sim.newCarTrial())
 		{
-			Car car = new Car(Integer.toString(count), time, false);
-			if (spacesAvailable(car))
+			if (sim.smallCarTrial())
 			{
-				parkVehicle(car, time, sim.setDuration());
-				count += 1;
-			}
-			else if (queueFull())
-			{
-				archiveNewVehicle(car);
-			}
-			else
-			{
-				enterQueue(car);
-			}
-		}
-		if (sim.smallCarTrial())
-		{
-			Car smallCar = new Car(Integer.toString(count), time, true);
-			if (spacesAvailable(smallCar))
-			{
-				parkVehicle(smallCar, time, sim.setDuration());
-				count += 1;
-			}
-			else if (queueFull())
-			{
-				archiveNewVehicle(smallCar);
+				Car smallCar = new Car(Integer.toString(count), time, true);
+				if (spacesAvailable(smallCar))
+				{
+					parkVehicle(smallCar, time, sim.setDuration());
+					count += 1;
+				}
+				else if (queueFull())
+				{
+					archiveNewVehicle(smallCar);
+				}
+				else
+				{
+					enterQueue(smallCar);
+				}
 			}
 			else
 			{
-				enterQueue(smallCar);
+				Car car = new Car(Integer.toString(count), time, false);
+				if (spacesAvailable(car))
+				{
+					parkVehicle(car, time, sim.setDuration());
+					count += 1;
+				}
+				else if (queueFull())
+				{
+					archiveNewVehicle(car);
+				}
+				else
+				{
+					enterQueue(car);
+				}
 			}
 		}
+		
 		if (sim.motorCycleTrial())
 		{
 			MotorCycle motorCycle = new MotorCycle(Integer.toString(count), time);
