@@ -208,6 +208,8 @@ public class CarPark
 	//What do you think?
 	
 	//This would cover trying to park only the first vehicle anywhos - Jared
+	//Yeah I changed my idea sorry haha, I think we still might need to take cars out of the queuue,
+	//if they stay to long and we need to arvhive them.
 	public void exitQueue(Vehicle v,int exitTime) throws SimulationException, VehicleException 
 	{
 		if (!v.isQueued()) //If vehicle is not queued: throw an exception.

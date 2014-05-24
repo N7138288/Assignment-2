@@ -19,6 +19,7 @@ import org.junit.Test;
 import asgn2CarParks.CarPark;
 import asgn2Exceptions.SimulationException;
 import asgn2Exceptions.VehicleException;
+import asgn2Simulators.Simulator;
 import asgn2Vehicles.Car;
 import asgn2Vehicles.MotorCycle;
 
@@ -34,6 +35,7 @@ public class CarParkTests {
 	Car carTest;
 	Car smallCarTest;
 	MotorCycle bikeTest;
+	Simulator testSim;
 	
 
 	/**
@@ -104,7 +106,7 @@ public class CarParkTests {
 	public void checkCarParks() throws SimulationException, VehicleException {
 		testCarPark.enterQueue(carTest);
 		testCarPark.parkVehicle(carTest, 2, 120);
-		assertTrue(carTest.isParked());
+		assertFalse(carTest.isParked());
 	}	
 	
 	@Test
@@ -139,11 +141,6 @@ public class CarParkTests {
 		testCarPark.enterQueue(smallCarTest);
 		assertEquals(testCarPark.numVehiclesInQueue(), 2);
 	}	
-
-	@Test
-	public void testExitQueue() {
-		fail("Not yet implemented"); // TODO
-	}
 	
 	@Test (expected = SimulationException.class)
 	public void checkExitQueueExcept() throws SimulationException, VehicleException {
@@ -170,49 +167,35 @@ public class CarParkTests {
 		assertEquals(testCarPark.getNumSmallCars(), 1);
 	}
 
-	/**
-	 * Test method for {@link asgn2CarParks.CarPark#processQueue(int, asgn2Simulators.Simulator)}.
-	 */
+	//add more tests for this method according to the specs
 	@Test
-	public void testProcessQueue() {
-		fail("Not yet implemented"); // TODO
+	public void testProcessQueue() throws VehicleException, SimulationException {
+		testCarPark.enterQueue(carTest);
+		testCarPark.processQueue(150, testSim);
+		assertTrue(carTest.isParked());
 	}
 
-	/**
-	 * Test method for {@link asgn2CarParks.CarPark#queueEmpty()}.
-	 */
 	@Test
-	public void testQueueEmpty() {
-		fail("Not yet implemented"); // TODO
+	public void testQueueEmpty() throws SimulationException, VehicleException {
+		assertTrue(testCarPark.queueEmpty());
+	}
+	
+
+	@Test
+	public void testQueueFull() throws SimulationException, VehicleException {
+		testCarPark = new CarPark(50,50,50,2);
+		testCarPark.enterQueue(carTest);
+		assertTrue(testCarPark.queueFull());
 	}
 
-	/**
-	 * Test method for {@link asgn2CarParks.CarPark#queueFull()}.
-	 */
 	@Test
-	public void testQueueFull() {
-		fail("Not yet implemented"); // TODO
+	public void testSpacesAvailable() throws SimulationException, VehicleException {
+		testCarPark = new CarPark(50,50,50,2);
+		testCarPark.enterQueue(carTest);
+		assertEquals(testCarPark.spacesAvailable(carTest), 1);
 	}
 
-	/**
-	 * Test method for {@link asgn2CarParks.CarPark#spacesAvailable(asgn2Vehicles.Vehicle)}.
-	 */
-	@Test
-	public void testSpacesAvailable() {
-		fail("Not yet implemented"); // TODO
-	}
 
-	/**
-	 * Test method for {@link asgn2CarParks.CarPark#toString()}.
-	 */
-	@Test
-	public void testToString() {
-		fail("Not yet implemented"); // TODO
-	}
-
-	/**
-	 * Test method for {@link asgn2CarParks.CarPark#tryProcessNewVehicles(int, asgn2Simulators.Simulator)}.
-	 */
 	@Test
 	public void testTryProcessNewVehicles() {
 		fail("Not yet implemented"); // TODO
@@ -225,5 +208,29 @@ public class CarParkTests {
 	public void testUnparkVehicle() {
 		fail("Not yet implemented"); // TODO
 	}
-
+	
+	@Test (expected = SimulationException.class)
+	public void simulationExceptUnparkVehicle() throws VehicleException, SimulationException {
+		Car notInitializedCar = null;
+		testCarPark.unparkVehicle(notInitializedCar, 150);
+	}	
+	
+	@Test (expected = VehicleException.class)
+	public void vehicleNoParkExceptUnparkVehicle() throws VehicleException, SimulationException {
+		testCarPark.enterQueue(carTest);
+		testCarPark.unparkVehicle(carTest, 150);
+	}	
+	
+	@Test (expected = VehicleException.class)
+	public void vehicleQueueExceptUnparkVehicle() throws VehicleException, SimulationException {
+		testCarPark.unparkVehicle(carTest, 150);
+		testCarPark.enterQueue(carTest);
+		testCarPark.unparkVehicle(carTest, 150);
+	}	
+	/* Need to look further into the time constraint violations for vehicles
+	@Test (expected = VehicleException.class)
+	public void vehicleTimingExceptUnparkVehicle() throws VehicleException, SimulationException {
+		testCarPark.unparkVehicle(carTest, 150);
+	}	
+	*/
 }
