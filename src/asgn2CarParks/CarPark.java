@@ -102,12 +102,12 @@ public class CarPark
 	 */
 	public void archiveDepartingVehicles(int time,boolean force) throws VehicleException, SimulationException 
 	{
-		for (int index = 0; index != spaces.size(); index++)
+		for (int index = 0; index != spaces.size() - 1; index++)
 		{
 			//If forced to leave car park, or if departure time is less or equal to the current time:
 			if ((force) || (spaces.get(index).getDepartureTime() <= time))
 			{
-				spaces.get(index).exitQueuedState(time); //Vehicle leaves the parked state.
+				spaces.get(index).exitParkedState(time); //Vehicle leaves the parked state.
 				past.add(spaces.get(index)); //Vehicle is added to the list of archives.
 				spaces.remove(index); //Vehicle is removed from the list of cars parked.
 			}
@@ -143,7 +143,7 @@ public class CarPark
 	public void archiveQueueFailures(int time) throws VehicleException 
 	{
 		//With no vehicles being inputted here, I'm guessing this is the solution?
-		for (int index = 0; index != queue.size(); index++) //For vehicle currently in the queue.
+		for (int index = 0; index != queue.size() - 1; index++) //For vehicle currently in the queue.
 		{
 			//If the vehicle has been in the queue too long.
 			if (time - queue.get(index).getArrivalTime() >= asgn2Simulators.Constants.MAXIMUM_QUEUE_TIME) 
@@ -151,6 +151,7 @@ public class CarPark
 				queue.get(index).exitQueuedState(time); //Vehicle leaves the queue state.
 				past.add(queue.get(index)); //Vehicle is added to the list of archives
 				queue.remove(index); //Vehicle is removed from the list of cars queued.
+				numQueue -= 1;
 			}
 		}
 	}
@@ -209,7 +210,9 @@ public class CarPark
 	
 	//This would cover trying to park only the first vehicle anywhos - Jared
 	//Yeah I changed my idea sorry haha, I think we still might need to take cars out of the queuue,
-	//if they stay to long and we need to arvhive them.
+	//if they stay to long and we need to archive them.
+	
+	//Done in the sim -Jared
 	public void exitQueue(Vehicle v,int exitTime) throws SimulationException, VehicleException 
 	{
 		if (!v.isQueued()) //If vehicle is not queued: throw an exception.
@@ -218,7 +221,7 @@ public class CarPark
 		}
 		else //Otherwise:
 		{
-			for (int loop = 0; loop != maxQueueSize; loop++) //For each vehicle in the queue.
+			for (int loop = 0; loop != maxQueueSize-1; loop++) //For each vehicle in the queue.
 			{
 				if (queue.get(loop) == v) //If the vehicle trying to leave is found in the queue.
 				{
@@ -423,6 +426,7 @@ public class CarPark
 	 */
 	
 	//This method or one it calls needs to set the vehicle to parked
+	//You're right, will do it in a sec - Jared
 	public void processQueue(int time, Simulator sim) throws VehicleException, SimulationException {
 		//No vehicles that have been in the queue too long are in this function
 		boolean block = false;
@@ -439,7 +443,9 @@ public class CarPark
 			}
 			else
 			{
-				exitQueue(queue.get(0), time);
+				Vehicle v = queue.get(0); //Catch vehicle so can enter the car park after leaving queue
+				exitQueue(v, time);
+				parkVehicle(v, time, sim.setDuration()); //Enter car park after leaving queue.
 			}
 		}
 	}
@@ -498,7 +504,57 @@ public class CarPark
 	 * @throws VehicleException if vehicle creation violates constraints 
 	 */
 	public void tryProcessNewVehicles(int time,Simulator sim) throws VehicleException, SimulationException {
-		
+		if (sim.newCarTrial())
+		{
+			Car car = new Car(Integer.toString(count), time, false);
+			if (spacesAvailable(car))
+			{
+				parkVehicle(car, time, sim.setDuration());
+				count += 1;
+			}
+			else if (queueFull())
+			{
+				archiveNewVehicle(car);
+			}
+			else
+			{
+				enterQueue(car);
+			}
+		}
+		if (sim.smallCarTrial())
+		{
+			Car smallCar = new Car("VehID", time, true);
+			if (spacesAvailable(smallCar))
+			{
+				parkVehicle(smallCar, time, sim.setDuration());
+				count += 1;
+			}
+			else if (queueFull())
+			{
+				archiveNewVehicle(smallCar);
+			}
+			else
+			{
+				enterQueue(smallCar);
+			}
+		}
+		if (sim.motorCycleTrial())
+		{
+			MotorCycle motorCycle = new MotorCycle("VehID", time);
+			if (spacesAvailable(motorCycle))
+			{
+				parkVehicle(motorCycle, time, sim.setDuration());
+				count += 1;
+			}
+			else if (queueFull())
+			{
+				archiveNewVehicle(motorCycle);
+			}
+			else
+			{
+				enterQueue(motorCycle);
+			}
+		}
 	}
 
 	/**
@@ -516,7 +572,7 @@ public class CarPark
 	*/
 	public void unparkVehicle(Vehicle v,int departureTime) throws VehicleException, SimulationException {
 		boolean inPark = false; //Flag to say vehicle was found in car park.
-		for (int index = 0; index != spaces.size(); index++) //For vehicle in car park:
+		for (int index = 0; index != spaces.size() - 1; index++) //For vehicle in car park:
 		{
 			if (spaces.get(index).getVehID() == v.getVehID()) //If parked vehicle is vehicle to remove from car park:
 			{
@@ -533,7 +589,6 @@ public class CarPark
 				{
 					numCars -= 1;
 				}
-				
 				if (typeSpaces.get(index) == "M")
 				{
 					motorCycleSpots -= 1;
