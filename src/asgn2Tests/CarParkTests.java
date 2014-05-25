@@ -12,6 +12,8 @@ package asgn2Tests;
 
 import static org.junit.Assert.*;
 
+import java.lang.reflect.Array;
+
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -236,4 +238,35 @@ public class CarParkTests {
 		testCarPark.unparkVehicle(carTest, 150);
 	}	
 	*/
+	
+	/* CarParkTests.java */
+	/*
+	 * Confirm that the API spec has not been violated through the
+	 * addition of public fields, constructors or methods that were
+	 * not requested
+	 */
+	@Test
+	public void NoExtraPublicMethods() {
+		//Extends Object, extras less toString() 
+		final int ExtraMethods = 21; 
+		final int NumObjectClassMethods = Array.getLength(Object.class.getMethods());
+		final int NumCarParkClassMethods = Array.getLength(CarPark.class.getMethods());
+		assertTrue("obj:"+NumObjectClassMethods+":cp:"+NumCarParkClassMethods,(NumObjectClassMethods+ExtraMethods)==NumCarParkClassMethods);
+	}
+
+	@Test 
+	public void NoExtraPublicFields() {
+		//Same as Vehicle 
+		final int NumObjectClassFields = Array.getLength(Object.class.getFields());
+		final int NumCarParkClassFields = Array.getLength(CarPark.class.getFields());
+		assertTrue("obj:"+NumObjectClassFields+":cp:"+NumCarParkClassFields,(NumObjectClassFields)==NumCarParkClassFields);
+	}
+
+	@Test 
+	public void NoExtraPublicConstructors() {
+		//One extra cons used. 
+		final int NumObjectClassConstructors = Array.getLength(Object.class.getConstructors());
+		final int NumCarParkClassConstructors = Array.getLength(CarPark.class.getConstructors());
+		assertTrue(":obj:"+NumObjectClassConstructors+":cp:"+NumCarParkClassConstructors,(NumObjectClassConstructors+1)==NumCarParkClassConstructors);
+	}
 }
