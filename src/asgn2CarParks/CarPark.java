@@ -142,7 +142,7 @@ public class CarPark {
 					+ "don't get parked or queued. Vehicle is archived.");
 		}
 		past.add(v); // Vehicle is added to the list of archived.
-		status += setVehicleMsg(v, "N", "A");
+		status += setVehicleMsg(v, "N", "A"); //Update status log of the vehicle
 		count += 1; // The number of vehicles processed is incremented.
 		numDissatisfied += 1; // Number of Dissatisfied vehicles is incremented.
 	}
@@ -161,13 +161,14 @@ public class CarPark {
 		{
 			// If the vehicle has been in the queue too long.
 			if (time - queue.get(index).getArrivalTime() >= asgn2Simulators.Constants.MAXIMUM_QUEUE_TIME) {
+				//Update vehicle status, adds the vehicle to archive, removes from queue
 				status += setVehicleMsg(queue.get(index), "Q", "A");
 				past.add(queue.get(index));
 				past.get(past.size() - 1).exitQueuedState(time);
-				queue.remove(index); // Vehicle is removed from the list of cars queued.
+				queue.remove(index);
 				index -= 1; // Prevents skipping indices after removal in list.
-				numQueue -= 1;
-				numDissatisfied += 1; // Number of Dissatisfied vehicles is incremented.
+				numQueue -= 1; 
+				numDissatisfied += 1;
 			}
 		}
 	}
@@ -178,7 +179,7 @@ public class CarPark {
 	 * @return true if car park empty, false otherwise
 	 */
 	public boolean carParkEmpty() {
-		return spaces.isEmpty(); // return if the list is empty.
+		return spaces.isEmpty(); 
 	}
 
 	/**
@@ -187,8 +188,8 @@ public class CarPark {
 	 * @return true if car park full, false otherwise
 	 */
 	public boolean carParkFull() {
-		return (spaces.size() >= (maxCarSpaces + maxMotorCycleSpaces)); // return if the list's size is greater or equal
-																		// to the max amount of spaces.
+		// return if the list's size is greater or equal to the max amount of spaces.
+		return (spaces.size() >= (maxCarSpaces + maxMotorCycleSpaces)); 
 	}
 
 	/**
@@ -208,7 +209,7 @@ public class CarPark {
 			throw new SimulationException("Simuation Exception: Queue is full: Will not add vehicle to queue.");
 		} else // Otherwise:
 		{
-			status += setVehicleMsg(v, "N", "Q");
+			status += setVehicleMsg(v, "N", "Q"); //Update vehicle status
 			v.enterQueuedState(); // Vehicle enters the queued state.
 			queue.add(v); // Add Vehicle to the end of the queue.
 			numQueue += 1; // The number of vehicles in the queue is incremented.
@@ -229,30 +230,24 @@ public class CarPark {
 	 * @throws VehicleException
 	 *             if the vehicle is in an incorrect state or timing constraints are violated
 	 */
-	// In a post to fb I think Jim said that we only can park the vehicle at the front of the queue. IE
-	// we can't loop through the queue to see if we can park one of the cars
-	// What do you think?
 
-	// This would cover trying to park only the first vehicle anywhos - Jared
-	// Yeah I changed my idea sorry haha, I think we still might need to take cars out of the queuue,
-	// if they stay to long and we need to archive them.
-
-	// Done in the sim -Jared
 	public void exitQueue(Vehicle v, int exitTime) throws SimulationException, VehicleException {
 		if (!v.isQueued()) // If vehicle is not queued: throw an exception.
 		{
 			throw new SimulationException("Simuation Exception: Vehicle is not in a queue.");
-		} else // Otherwise:
+		} else 
 		{
-			for (int loop = 0; loop != queue.size(); loop++) // For each vehicle in the queue.
+			// For each vehicle in the queue.
+			for (int loop = 0; loop != queue.size(); loop++) 
 			{
-				if (queue.get(loop) == v) // If the vehicle trying to leave is found in the queue.
+				// Get the vehicle trying to leave queue
+				if (queue.get(loop) == v) 
 				{
-					status += setVehicleMsg(v, "Q", "N");
+					status += setVehicleMsg(v, "Q", "N"); //Update vehicle status
 					v.exitQueuedState(exitTime); // Vehicle exits the queued state.
 					queue.remove(loop); // Vehicle is removed from the list of queued vehicles.
 					loop = queue.size() - 1; // Change the loop value to break the for loop.
-					numQueue -= 1; // The number of vehicles in queue is decremented.
+					numQueue -= 1;
 				}
 			}
 		}
@@ -386,8 +381,8 @@ public class CarPark {
 				}
 			} else // If there are motor cycle spots remaining: add motor cycle to motor cycle spots.
 			{
-				status += setVehicleMsg(v, "N", "P");
-				v.enterParkedState(time, intendedDuration);
+				status += setVehicleMsg(v, "N", "P"); //Update vehicle status
+				v.enterParkedState(time, intendedDuration); //Put the vehicle in a parked state
 				spaces.add(v); // Add motor cycle to list of parked vehicles.
 				typeSpaces.add("M"); // Add motor cycle spot to list of used spots.
 				motorCycleSpots += 1; // Increment number of motor cycles spots used.
@@ -403,23 +398,23 @@ public class CarPark {
 							"Simulation Exception: There are no car parks available for a small car.");
 				} else // If there are normal car park spots remaining: add small car to normal car park spots.
 				{
-					status += setVehicleMsg(v, "N", "P");
+					status += setVehicleMsg(v, "N", "P"); //Update vehicle status
 					v.enterParkedState(time, intendedDuration);
 					spaces.add(v); // Add motor cycle to list of parked vehicles.
 					typeSpaces.add("N"); // Add normal car spot to list of used spots.
-					normalSpots += 1; // Increment number of normal spots used.
-					numSmallCars += 1; // Increment number of small cars parked.
-					numCars += 1; // Increment number of cars parked.
+					normalSpots += 1;
+					numSmallCars += 1; 
+					numCars += 1; 
 				}
 			} else // If there are small car spots remaining: add small car to small car spots.
 			{
-				status += setVehicleMsg(v, "N", "P");
+				status += setVehicleMsg(v, "N", "P"); //Update vehicle status
 				v.enterParkedState(time, intendedDuration);
 				spaces.add(v); // Add small car to list of parked vehicles.
 				typeSpaces.add("S"); // Add small car spot to list of used spots.
-				smallSpots += 1; // Increment number of small car spots used.
-				numSmallCars += 1; // Increment number of small cars parked.
-				numCars += 1; // Increment number of cars parked.
+				smallSpots += 1;
+				numSmallCars += 1; 
+				numCars += 1; 
 			}
 		} else // else: this vehicle is a normal car:
 		{
@@ -429,12 +424,12 @@ public class CarPark {
 						"Simulation Exception: There are no car parks available for a normal car.");
 			} else // If there are normal car park spots remaining: add normal car to normal car park spots.
 			{
-				status += setVehicleMsg(v, "N", "P");
+				status += setVehicleMsg(v, "N", "P"); //Update vehicle status
 				v.enterParkedState(time, intendedDuration);
 				spaces.add(v); // Add normal car to list of parked vehicles.
 				typeSpaces.add("N"); // Add normal car spot to list of used spots.
-				normalSpots += 1; // Increment number of normal cars spots used.
-				numCars += 1; // Increment number of cars parked.
+				normalSpots += 1; 
+				numCars += 1; 
 			}
 		}
 
@@ -452,15 +447,36 @@ public class CarPark {
 	 *             if state is incorrect, or timing constraints are violated
 	 */
 
-	// This method or one it calls needs to set the vehicle to parked
-	// You're right, will do it in a sec - Jared
+	//Slight problem with this Method, I don't think it will ever get to the second else if
+	//If it goes into the while loop the only way out is to change block to true and therefore not get the second else if
+	//If it passes the while loop and goes into the 1st else if the block is turned on.
+	//Both scenarios will change block to true before it can never get to the second else if
+	//Don't want to change code since it might work and I am being stupid but
+	//If I am correct a suggestion, 
+	//check if there are spaces 1st, if not block
+	//	check if queue empty if so block
+	//		else process a vehicle
+	
+	/*
+	if (spacesAvailable(queue.get(0)) == false) {
+		block = true;
+	} else if (queue.isEmpty()){
+		block = true;
+	} else {
+		Vehicle v = queue.get(0);
+		exitQueue(v, time);
+		parkVehicle(v, time, sim.setDuration());
+	}
+	*/
+	
 	public void processQueue(int time, Simulator sim) throws VehicleException, SimulationException {
-		// No vehicles that have been in the queue too long are in this function
 		boolean block = false;
-
-		while (block == false) {
+		
+		//If the queue is empty stop processing the queue
+		while (block == false) { //This would loop until queue became empty, infinite loop?
 			if (queue.isEmpty()) {
 				block = true;
+			//If no spaces available stop processing the queue
 			} else if (spacesAvailable(queue.get(0)) == false) {
 				block = true;
 			} else if (block == false) {
@@ -610,7 +626,7 @@ public class CarPark {
 				}
 
 				inPark = true; // Set found flag.
-				status += setVehicleMsg(v, "P", "N");
+				status += setVehicleMsg(v, "P", "N"); //Update vehicle status
 				v.exitParkedState(departureTime); // Vehicle is removed from the list of vehicles parked.
 				spaces.remove(index);
 				typeSpaces.remove(index);
@@ -621,9 +637,6 @@ public class CarPark {
 		{
 			throw new SimulationException(
 					"Simulation Exception: Vehicle not found in car park. Vehicle not removed from car park.");
-		}
-		if (v.isQueued()) {
-			throw new VehicleException("Vehicle Exception: Vehicle is queued. Vehicle not removed from car park.");
 		}
 	}
 

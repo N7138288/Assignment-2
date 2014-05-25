@@ -151,7 +151,8 @@ public abstract class Vehicle {
 		if ((parked) || (queued)) // If the vehicle is not in the correct state: throw an exception.
 		{
 			throw new VehicleException(
-					"Vehicle Exception: Not in Correct state (required state: parked = queued = false). Vehicle has not entered queued state.");
+					"Vehicle Exception: Not in Correct state (required state: parked = queued = false). Vehicle has "
+					+ "not entered queued state.");
 		} else {
 			if (!everQueued) // Set that the vehicle has queued before.
 			{
