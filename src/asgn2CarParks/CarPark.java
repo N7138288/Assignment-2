@@ -528,7 +528,7 @@ public class CarPark {
 			} 
 			else
 			{
-				newCar = new Car(Integer.toString(count), time, true); //Create Car with unique ID
+				newCar = new Car(Integer.toString(count), time, false); //Create Car with unique ID
 			}
 			if (spacesAvailable(newCar)) { //Check if spaces available: if so park the car.
 				parkVehicle(newCar, time, sim.setDuration());
@@ -589,7 +589,6 @@ public class CarPark {
 				}
 
 				inPark = true; // Set found flag.
-				status += setVehicleMsg(v, "P", "N"); //Update vehicle status
 				v.exitParkedState(departureTime); // Vehicle is removed from the list of vehicles parked.
 				spaces.remove(index);
 				typeSpaces.remove(index);

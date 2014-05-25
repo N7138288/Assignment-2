@@ -48,6 +48,7 @@ public class CarParkTests {
 		carTest = new Car("111AAA", 1, false);
 		smallCarTest = new Car("222AAA", 1, true);
 		bikeTest = new MotorCycle("333AAA", 1);
+		//Simulator testSim = new Simulator();
 	}
 	/*
 	@Test (expected=SimulationException.class )
