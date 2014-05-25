@@ -85,18 +85,6 @@ public class SimulationRunner {
 	 * @param args Arguments to the simulation 
 	 */
 	public static void main(String[] args) {
-		CarPark cp = new CarPark();
-		Simulator s = null;
-		Log l = null; 
-		try {
-			s = new Simulator();
-			l = new Log();
-		} catch (IOException | SimulationException e1) {
-			e1.printStackTrace();
-			System.exit(-1);
-		}
-		
-
 
 		//Run the Gui
     	// Create the main frame
@@ -127,15 +115,6 @@ public class SimulationRunner {
 			mainFrame.defaultMotorCycleSpacesText.setText(args[8]);
 			mainFrame.defaultMaxQueueText.setText(args[9]);
 		}
-		
-		//Run the simulation 
-		SimulationRunner sr = new SimulationRunner(cp,s,l);
-		try {
-			sr.runSimulation();
-		} catch (Exception e) {
-			e.printStackTrace();
-			System.exit(-1);
-		} 
 	} 
 
 	/**

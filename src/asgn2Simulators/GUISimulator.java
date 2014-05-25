@@ -20,6 +20,7 @@ import java.awt.HeadlessException;
 import java.awt.Insets;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.IOException;
 
 import javax.swing.JButton;
 import javax.swing.JFrame;
@@ -31,6 +32,7 @@ import javax.swing.JTextField;
 import javax.swing.border.LineBorder;
 import javax.swing.border.TitledBorder;
 
+import asgn2CarParks.CarPark;
 import asgn2Exceptions.SimulationException;
 
 /**
@@ -263,6 +265,26 @@ public class GUISimulator extends JFrame implements Runnable, ActionListener {
 				throw new SimulationException("Maximum small car spaces must be non-negative and strictly less then the maximum car spaces, given "
 						+ Constants.DEFAULT_MAX_SMALL_CAR_SPACES);
 			}
+			
+			//Run the simulation 
+			CarPark cp = new CarPark();
+			Simulator s = null;
+			Log l = null; 
+			try {
+				s = new Simulator();
+				l = new Log();
+			} catch (IOException | SimulationException e1) {
+				e1.printStackTrace();
+				System.exit(-1);
+			}
+			
+			SimulationRunner sr = new SimulationRunner(cp,s,l);
+			try {
+				sr.runSimulation();
+			} catch (Exception e) {
+				e.printStackTrace();
+				System.exit(-1);
+			} 
 		}	
 		catch (NumberFormatException exception) // User has entered an invalid number
 		{
