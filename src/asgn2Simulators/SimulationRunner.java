@@ -15,6 +15,7 @@ import static javax.swing.JFrame.EXIT_ON_CLOSE;
 import java.io.IOException;
 
 import javax.swing.JFrame;
+import javax.swing.JTextField;
 
 import asgn2CarParks.CarPark;
 import asgn2Exceptions.SimulationException;
@@ -95,25 +96,8 @@ public class SimulationRunner {
 			System.exit(-1);
 		}
 		
-		//TODO: Implement Argument Processing 
-		//Task 3: allow command line components: All or Nothing.
-		//Step 1: Zero Arguments - not required
-		//Step 2: Ten Arguments
-		if (args.length == 10)
-		{
-			//Step 3: Populate the Fields:
-			//1
-			//2
-			//3
-			//4
-			//5
-			//6
-			//7
-			//8
-			//9
-			//10
-			
-		}
+
+
 		//Run the Gui
     	// Create the main frame
 		GUISimulator mainFrame = new GUISimulator("");
@@ -125,6 +109,24 @@ public class SimulationRunner {
 		mainFrame.pack();
         // Make the simulation visible
         mainFrame.setVisible(true);
+        
+		//TODO: Implement Argument Processing 
+		//Task 3: allow command line components: All or Nothing.
+		//Step 1: Zero Arguments - not required
+		//Step 2: Ten Arguments
+		if (args.length == 10)
+		{
+			mainFrame.defaultSeedText.setText(args[0]);
+			mainFrame.defaultCarProbText.setText(args[1]);
+			mainFrame.defaultSmallCarProbText.setText(args[2]);
+			mainFrame.defaultMotorCycleProbText.setText(args[3]);
+			mainFrame.defaultIntendedMeanText.setText(args[4]);
+			mainFrame.defaultIntendedSDText.setText(args[5]);
+			mainFrame.defaultSpacesText.setText(args[6]);
+			mainFrame.defaultSmallSpacesText.setText(args[7]);
+			mainFrame.defaultMotorCycleSpacesText.setText(args[8]);
+			mainFrame.defaultMaxQueueText.setText(args[9]);
+		}
 		
 		//Run the simulation 
 		SimulationRunner sr = new SimulationRunner(cp,s,l);

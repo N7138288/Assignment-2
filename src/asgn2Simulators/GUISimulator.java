@@ -47,16 +47,16 @@ public class GUISimulator extends JFrame implements Runnable, ActionListener {
 	private JScrollPane textScrollPane; 
 	
 	//Text Fields: Things to be changed via entering data and command line
-	private JTextField defaultSeedText; //Default Seed
-	private JTextField defaultCarProbText; //Default Car Probability
-	private JTextField defaultSmallCarProbText; //Default Small Car Probability
-	private JTextField defaultMotorCycleProbText; //Default Motor Cycle Probability
-	private JTextField defaultIntendedMeanText; //Default Intended Stay Mean
-	private JTextField defaultIntendedSDText; //Default Intended Stay Standard Deviation
-	private JTextField defaultSpacesText; //Default Maximum Car Spaces
-	private JTextField defaultSmallSpacesText; //Default Maximum Small Car Spaces
-	private JTextField defaultMotorCycleSpacesText; //Default Maximum Motor Cycle Spaces
-	private JTextField defaultMaxQueueText; //Default Maximum Queue Size
+	JTextField defaultSeedText; //Default Seed
+	JTextField defaultCarProbText; //Default Car Probability
+	JTextField defaultSmallCarProbText; //Default Small Car Probability
+	JTextField defaultMotorCycleProbText; //Default Motor Cycle Probability
+	JTextField defaultIntendedMeanText; //Default Intended Stay Mean
+	JTextField defaultIntendedSDText; //Default Intended Stay Standard Deviation
+	JTextField defaultSpacesText; //Default Maximum Car Spaces
+	JTextField defaultSmallSpacesText; //Default Maximum Small Car Spaces
+	JTextField defaultMotorCycleSpacesText; //Default Maximum Motor Cycle Spaces
+	JTextField defaultMaxQueueText; //Default Maximum Queue Size
 	
 	//Start button
 	private JButton startButton;
@@ -153,7 +153,6 @@ public class GUISimulator extends JFrame implements Runnable, ActionListener {
 		// Return the newly-created text field (but not the label, which never changes)
 		return parameterText;
 	}
-	
 	
 	/*
 	 * Convenience method for creating a set of positioning constraints for the
