@@ -106,7 +106,8 @@ public class CarPark
 		{
 			//If forced to leave car park, or if departure time is less or equal to the current time:
 			if ((force) || (spaces.get(index).getDepartureTime() <= time))
-			{
+			{				
+				status += setVehicleMsg(spaces.get(index), "P", "A");
 				past.add(spaces.get(index));
 				unparkVehicle(past.get(past.size() - 1), time);
 				index -= 1; //Prevents skipping indices after removal in list.
@@ -131,6 +132,7 @@ public class CarPark
 			throw new SimulationException("Simulation Exception: Vehicle is currently queued. This function is for vehicles that don't get parked or queued. Vehicle is archived.");
 		}
 		past.add(v); //Vehicle is added to the list of archived.
+		status += setVehicleMsg(v, "N", "A");
 		count += 1; //The number of vehicles processed is incremented.
 		numDissatisfied += 1; //Number of Dissatisfied vehicles is incremented.
 	}
@@ -148,6 +150,7 @@ public class CarPark
 			//If the vehicle has been in the queue too long.
 			if (time - queue.get(index).getArrivalTime() >= asgn2Simulators.Constants.MAXIMUM_QUEUE_TIME) 
 			{
+				status += setVehicleMsg(queue.get(index), "Q", "A");
 				past.add(queue.get(index));
 				past.get(past.size()-1).exitQueuedState(time);
 				queue.remove(index); //Vehicle is removed from the list of cars queued.
@@ -172,7 +175,7 @@ public class CarPark
 	 * @return true if car park full, false otherwise
 	 */
 	public boolean carParkFull() {
-		return (spaces.size() >= maxSmallCarSpaces); //return if the list's size is greater or equal to the max amount of spaces.
+		return (spaces.size() >= (maxCarSpaces + maxMotorCycleSpaces)); //return if the list's size is greater or equal to the max amount of spaces.
 	}
 	
 	/**
@@ -190,6 +193,7 @@ public class CarPark
 		}
 		else //Otherwise:
 		{
+			status += setVehicleMsg(v, "N", "Q");
 			v.enterQueuedState(); //Vehicle enters the queued state.
 			queue.add(v); //Add Vehicle to the end of the queue.
 			numQueue += 1; //The number of vehicles in the queue is incremented.
@@ -227,6 +231,7 @@ public class CarPark
 			{
 				if (queue.get(loop) == v) //If the vehicle trying to leave is found in the queue.
 				{
+					status += setVehicleMsg(v, "Q", "N");
 					v.exitQueuedState(exitTime); //Vehicle exits the queued state.
 					queue.remove(loop); //Vehicle is removed from the list of queued vehicles.
 					loop = queue.size() - 1; //Change the loop value to break the for loop.
@@ -357,6 +362,7 @@ public class CarPark
 				}
 				else //If there are small car park spots remaining: add motor cycle to small car park spots.
 				{
+					status += setVehicleMsg(v, "N", "P");
 					v.enterParkedState(time, intendedDuration);
 					spaces.add(v); //Add motor cycle to list of parked vehicles.
 					typeSpaces.add("S"); //Add small spot to list of used spots.
@@ -366,6 +372,7 @@ public class CarPark
 			}
 			else //If there are motor cycle spots remaining: add motor cycle to motor cycle spots.
 			{
+				status += setVehicleMsg(v, "N", "P");
 				v.enterParkedState(time, intendedDuration);
 				spaces.add(v); //Add motor cycle to list of parked vehicles.
 				typeSpaces.add("M"); //Add motor cycle spot to list of used spots.
@@ -383,6 +390,7 @@ public class CarPark
 				}
 				else //If there are normal car park spots remaining: add small car to normal car park spots.
 				{
+					status += setVehicleMsg(v, "N", "P");
 					v.enterParkedState(time, intendedDuration);
 					spaces.add(v); //Add motor cycle to list of parked vehicles.
 					typeSpaces.add("N"); //Add normal car spot to list of used spots.
@@ -393,6 +401,7 @@ public class CarPark
 			}
 			else //If there are small car spots remaining: add small car to small car spots.
 			{
+				status += setVehicleMsg(v, "N", "P");
 				v.enterParkedState(time, intendedDuration);
 				spaces.add(v); //Add small car to list of parked vehicles.
 				typeSpaces.add("S"); //Add small car spot to list of used spots.
@@ -409,6 +418,7 @@ public class CarPark
 			}
 			else //If there are normal car park spots remaining: add normal car to normal car park spots.
 			{
+				status += setVehicleMsg(v, "N", "P");
 				v.enterParkedState(time, intendedDuration);
 				spaces.add(v); //Add normal car to list of parked vehicles.
 				typeSpaces.add("N"); //Add normal car spot to list of used spots.
@@ -416,6 +426,7 @@ public class CarPark
 				numCars += 1; //Increment number of cars parked.
 			}
 		}
+		
 	}
 	
 	/**
@@ -609,6 +620,7 @@ public class CarPark
 				}
 				
 				inPark = true; //Set found flag.
+				status += setVehicleMsg(v, "P", "N");
 				v.exitParkedState(departureTime); //Vehicle is removed from the list of vehicles parked.
 				spaces.remove(index);
 				typeSpaces.remove(index);
