@@ -10,7 +10,11 @@
  */
 package asgn2Simulators;
 
+import static javax.swing.JFrame.EXIT_ON_CLOSE;
+
 import java.io.IOException;
+
+import javax.swing.JFrame;
 
 import asgn2CarParks.CarPark;
 import asgn2Exceptions.SimulationException;
@@ -110,6 +114,17 @@ public class SimulationRunner {
 			//10
 			
 		}
+		//Run the Gui
+    	// Create the main frame
+		GUISimulator mainFrame = new GUISimulator("");
+	 	// Terminate the program if the user closes the main frame
+        mainFrame.setDefaultCloseOperation(EXIT_ON_CLOSE);
+        // Set the title for the main frame
+		mainFrame.setTitle("Car Park Simulator");
+		// Resize the main frame to fit its components
+		mainFrame.pack();
+        // Make the simulation visible
+        mainFrame.setVisible(true);
 		
 		//Run the simulation 
 		SimulationRunner sr = new SimulationRunner(cp,s,l);

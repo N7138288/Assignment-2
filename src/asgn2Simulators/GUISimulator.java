@@ -31,12 +31,14 @@ import javax.swing.JTextField;
 import javax.swing.border.LineBorder;
 import javax.swing.border.TitledBorder;
 
+import asgn2Exceptions.SimulationException;
+
 /**
  * @author hogan
  *
  */
 @SuppressWarnings("serial")
-public abstract class GUISimulator extends JFrame implements Runnable, ActionListener{
+public class GUISimulator extends JFrame implements Runnable, ActionListener {
 
 	//Parameter Setup
 	
@@ -90,27 +92,28 @@ public abstract class GUISimulator extends JFrame implements Runnable, ActionLis
 		this.add(textScrollPane, positionConstraints(Position.TOPCENTRE, mainMargin));
 		resetDisplay("Set the initial simulation parameters and press 'Start'\n\n");
 
-		// Button for starting the simulation
-		startButton = new JButton("Start");
-		startButton.addActionListener(this);
-		
 		// Add editable panels for simulation parameters
 		defaultSeedText = addParameterPanel("Random number seed:", Constants.DEFAULT_SEED);
-		defaultCarProbText = addParameterPanel("Dam capacity (megalitres):", Constants.DEFAULT_CAR_PROB);
-		defaultSmallCarProbText = addParameterPanel("Maximum daily inflow (megalitres):", Constants.DEFAULT_SMALL_CAR_PROB);
-		defaultMotorCycleProbText = addParameterPanel("Maximum daily consumption (megalitres):", Constants.DEFAULT_MOTORCYCLE_PROB);
-		defaultIntendedMeanText = addParameterPanel("Default downriver release (megalitres):", Constants.DEFAULT_INTENDED_STAY_MEAN);
-		defaultIntendedSDText = addParameterPanel("Job duration (days):", Constants.DEFAULT_INTENDED_STAY_SD);
-		defaultSpacesText = addParameterPanel("Maximum daily inflow (megalitres):", Constants.DEFAULT_MAX_CAR_SPACES);
-		defaultSmallSpacesText = addParameterPanel("Maximum daily consumption (megalitres):", Constants.DEFAULT_MAX_SMALL_CAR_SPACES);
-		defaultMotorCycleSpacesText = addParameterPanel("Default downriver release (megalitres):", Constants.DEFAULT_MAX_MOTORCYCLE_SPACES);
-		defaultMaxQueueText = addParameterPanel("Job duration (days):", Constants.DEFAULT_MAX_QUEUE_SIZE);
+		defaultCarProbText = addParameterPanel("Default car probability:", Constants.DEFAULT_CAR_PROB);
+		defaultSmallCarProbText = addParameterPanel("Default small car probability:", Constants.DEFAULT_SMALL_CAR_PROB);
+		defaultMotorCycleProbText = addParameterPanel("Default motor cycle probability:", Constants.DEFAULT_MOTORCYCLE_PROB);
+		defaultIntendedMeanText = addParameterPanel("Default intended stay mean:", Constants.DEFAULT_INTENDED_STAY_MEAN);
+		defaultIntendedSDText = addParameterPanel("Default intended stay standard deviation:", Constants.DEFAULT_INTENDED_STAY_SD);
+		defaultSpacesText = addParameterPanel("Default maximum car spaces:", Constants.DEFAULT_MAX_CAR_SPACES);
+		defaultSmallSpacesText = addParameterPanel("Default maximum small car spaces:", Constants.DEFAULT_MAX_SMALL_CAR_SPACES);
+		defaultMotorCycleSpacesText = addParameterPanel("Default maximum motor cycle spaces:", Constants.DEFAULT_MAX_MOTORCYCLE_SPACES);
+		defaultMaxQueueText = addParameterPanel("Default maximum queue:", Constants.DEFAULT_MAX_QUEUE_SIZE);
 		
 		// Panel to contain the buttons
 		buttons = new JPanel(new GridBagLayout());
-		buttons.setBorder(new TitledBorder(new LineBorder(Color.BLACK), "Dam", CENTER, BOTTOM));
+		buttons.setBorder(new TitledBorder(new LineBorder(Color.BLACK), "Car Park", CENTER, BOTTOM));
 		this.add(buttons, positionConstraints(Position.BOTTOMCENTRE, mainMargin));
 		buttons.setVisible(true);
+		
+		// Button for starting the simulation
+		startButton = new JButton("Start");
+		startButton.addActionListener(this);
+		buttons.add(startButton);
 	}
 	
 	/*
@@ -132,7 +135,8 @@ public abstract class GUISimulator extends JFrame implements Runnable, ActionLis
 	 * Convenience method to add a labelled, editable text field to the
 	 * main frame, with a fixed label and a mutable default text value
 	 */
-	private JTextField addParameterPanel(String label, Number defaultValue) {
+	private JTextField addParameterPanel(String label, Number defaultValue) 
+	{
 		// A parameter panel has two components, a label and a text field
 		JPanel parameterPanel = new JPanel();
 		JLabel parameterLabel = new JLabel(label);
@@ -155,8 +159,8 @@ public abstract class GUISimulator extends JFrame implements Runnable, ActionLis
 	 * Convenience method for creating a set of positioning constraints for the
 	 * specific layout we want for components of our GUI
 	 */
-	private GridBagConstraints positionConstraints(Position location, Integer margin) {
-		
+	private GridBagConstraints positionConstraints(Position location, Integer margin) 
+	{
 		GridBagConstraints constraints = new GridBagConstraints();
 		switch (location) {
 		case TOPCENTRE:
@@ -197,7 +201,7 @@ public abstract class GUISimulator extends JFrame implements Runnable, ActionLis
 		//Consider the alternatives (not all are available at once) 
 		if (source == startButton)
 		{
-			//startSimulation();
+			startSimulation();
 		}
 		/*
 		else if (source == halfReleaseButton)
@@ -216,5 +220,64 @@ public abstract class GUISimulator extends JFrame implements Runnable, ActionLis
 			checkForEndOfSimulation();
 		};
 		*/
+	}
+	
+	private void startSimulation()
+	{
+		try
+		{
+			//Ensure correct type of data:
+			Constants.DEFAULT_SEED = Integer.parseInt(defaultSeedText.getText().trim());
+			Constants.DEFAULT_CAR_PROB = Double.parseDouble(defaultCarProbText.getText().trim());
+			Constants.DEFAULT_SMALL_CAR_PROB = Double.parseDouble(defaultSmallCarProbText.getText().trim());
+			Constants.DEFAULT_MOTORCYCLE_PROB = Double.parseDouble(defaultMotorCycleProbText.getText().trim());
+			Constants.DEFAULT_INTENDED_STAY_MEAN = Double.parseDouble(defaultIntendedMeanText.getText().trim());
+			Constants.DEFAULT_INTENDED_STAY_SD = Double.parseDouble(defaultIntendedSDText.getText().trim());
+			Constants.DEFAULT_MAX_CAR_SPACES = Integer.parseInt(defaultSpacesText.getText().trim());
+			Constants.DEFAULT_MAX_SMALL_CAR_SPACES = Integer.parseInt(defaultSmallSpacesText.getText().trim());
+			Constants.DEFAULT_MAX_MOTORCYCLE_SPACES = Integer.parseInt(defaultMotorCycleSpacesText.getText().trim());
+			Constants.DEFAULT_MAX_QUEUE_SIZE = Integer.parseInt(defaultMaxQueueText.getText().trim());
+			
+			//Tests to ensure valid data:
+			/*
+			 * At this point, you should do the proper checks on the CarPark:
+			•	maxCarSpaces, maxMotorCycleSpaces, maxQueueSize >= 0
+			• 0 <= maxSmallCarSpaces <= maxCarSpaces
+			 */
+			if (Constants.DEFAULT_MAX_CAR_SPACES <= 0)
+			{
+				throw new SimulationException("Maximum car spaces must be non-negative, given "
+						+ Constants.DEFAULT_MAX_CAR_SPACES);
+			}
+			if (Constants.DEFAULT_MAX_MOTORCYCLE_SPACES <= 0)
+			{
+				throw new SimulationException("Maximum motor cycle spaces must be non-negative, given "
+						+ Constants.DEFAULT_MAX_MOTORCYCLE_SPACES);
+			}
+			if (Constants.DEFAULT_MAX_QUEUE_SIZE <= 0)
+			{
+				throw new SimulationException("Maximum queue size must be non-negative, given "
+						+ Constants.DEFAULT_MAX_QUEUE_SIZE);
+			}
+			if ((Constants.DEFAULT_MAX_SMALL_CAR_SPACES <= 0) || (Constants.DEFAULT_MAX_SMALL_CAR_SPACES >= Constants.DEFAULT_MAX_CAR_SPACES))
+			{
+				throw new SimulationException("Maximum small car spaces must be non-negative and strictly less then the maximum car spaces, given "
+						+ Constants.DEFAULT_MAX_SMALL_CAR_SPACES);
+			}
+		}	
+		catch (NumberFormatException exception) // User has entered an invalid number
+		{
+			appendDisplay("Invalid number - " + exception.getMessage() + "\n");
+		}
+		catch (SimulationException exception) //Invalid Data
+		{
+			appendDisplay(exception.getMessage() + "\n");
+		}
+	}
+
+	@Override
+	public void run() {
+		// TODO Auto-generated method stub
+		
 	}
 }
