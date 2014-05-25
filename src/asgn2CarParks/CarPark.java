@@ -11,10 +11,7 @@
 package asgn2CarParks;
 
 import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.LinkedList;
 import java.util.List;
-import java.util.Queue;
 
 import asgn2Exceptions.SimulationException;
 import asgn2Exceptions.VehicleException;
@@ -167,8 +164,8 @@ public class CarPark {
 				past.get(past.size() - 1).exitQueuedState(time);
 				queue.remove(index);
 				index -= 1; // Prevents skipping indices after removal in list.
-				numQueue -= 1; 
-				numDissatisfied += 1;
+				numQueue -= 1; // Number of vehicles in queue is incremented.
+				numDissatisfied += 1; // Number of Dissatisfied vehicles is incremented.
 			}
 		}
 	}
@@ -247,7 +244,7 @@ public class CarPark {
 					v.exitQueuedState(exitTime); // Vehicle exits the queued state.
 					queue.remove(loop); // Vehicle is removed from the list of queued vehicles.
 					loop = queue.size() - 1; // Change the loop value to break the for loop.
-					numQueue -= 1;
+					numQueue -= 1; // The number of vehicles in the queue is incremented.
 				}
 			}
 		}
@@ -345,7 +342,6 @@ public class CarPark {
 		return this.numQueue;
 	}
 
-	// Update: Motor cycle cannot park in a normal car park spot, only a motor cycle spot or small car spot. - Jared
 	/**
 	 * Method to add vehicle successfully to the car park store. Precondition is a test that spaces are available.
 	 * Includes transition via Vehicle.enterParkedState.
@@ -445,30 +441,7 @@ public class CarPark {
 	 *             if no suitable spaces available when parking attempted
 	 * @throws VehicleException
 	 *             if state is incorrect, or timing constraints are violated
-	 */
-
-	//Slight problem with this Method, I don't think it will ever get to the second else if
-	//If it goes into the while loop the only way out is to change block to true and therefore not get the second else if
-	//If it passes the while loop and goes into the 1st else if the block is turned on.
-	//Both scenarios will change block to true before it can never get to the second else if
-	//Don't want to change code since it might work and I am being stupid but
-	//If I am correct a suggestion, 
-	//check if there are spaces 1st, if not block
-	//	check if queue empty if so block
-	//		else process a vehicle
-	
-	/*
-	if (spacesAvailable(queue.get(0)) == false) {
-		block = true;
-	} else if (queue.isEmpty()){
-		block = true;
-	} else {
-		Vehicle v = queue.get(0);
-		exitQueue(v, time);
-		parkVehicle(v, time, sim.setDuration());
-	}
-	*/
-	
+	 */	
 	public void processQueue(int time, Simulator sim) throws VehicleException, SimulationException {
 		boolean block = false;
 		
@@ -479,7 +452,7 @@ public class CarPark {
 			//If no spaces available stop processing the queue
 			} else if (spacesAvailable(queue.get(0)) == false) {
 				block = true;
-			} else if (block == false) {
+			} else {
 				Vehicle v = queue.get(0); // Catch vehicle so can enter the car park after leaving queue
 				exitQueue(v, time);
 				parkVehicle(v, time, sim.setDuration()); // Enter car park after leaving queue.
@@ -548,38 +521,32 @@ public class CarPark {
 	 *             if vehicle creation violates constraints
 	 */
 	public void tryProcessNewVehicles(int time, Simulator sim) throws VehicleException, SimulationException {
-		if (sim.newCarTrial()) {
-			if (sim.smallCarTrial()) {
-				Car smallCar = new Car(Integer.toString(count), time, true);
-				if (spacesAvailable(smallCar)) {
-					parkVehicle(smallCar, time, sim.setDuration());
-					count += 1;
-				} else if (queueFull()) {
-					archiveNewVehicle(smallCar);
-				} else {
-					enterQueue(smallCar);
-				}
-			} else {
-				Car car = new Car(Integer.toString(count), time, false);
-				if (spacesAvailable(car)) {
-					parkVehicle(car, time, sim.setDuration());
-					count += 1;
-				} else if (queueFull()) {
-					archiveNewVehicle(car);
-				} else {
-					enterQueue(car);
-				}
+		if (sim.newCarTrial()) { // If a car is to be made
+			Car newCar;
+			if (sim.smallCarTrial()) { // If the car is a small car
+				newCar = new Car(Integer.toString(count), time, true); //Create Car with unique ID
+			} 
+			else
+			{
+				newCar = new Car(Integer.toString(count), time, true); //Create Car with unique ID
+			}
+			if (spacesAvailable(newCar)) { //Check if spaces available: if so park the car.
+				parkVehicle(newCar, time, sim.setDuration());
+				count += 1;
+			} else if (queueFull()) { //Otherwise check the queue, if full archive the car.
+				archiveNewVehicle(newCar);
+			} else { //Otherwise throw it in the queue.
+				enterQueue(newCar);
 			}
 		}
-
-		if (sim.motorCycleTrial()) {
-			MotorCycle motorCycle = new MotorCycle(Integer.toString(count), time);
-			if (spacesAvailable(motorCycle)) {
+		if (sim.motorCycleTrial()) { //If a motor cycle is to be made
+			MotorCycle motorCycle = new MotorCycle(Integer.toString(count), time); //Create a motor cycle witha unique ID
+			if (spacesAvailable(motorCycle)) { //If there are spaces available: park it
 				parkVehicle(motorCycle, time, sim.setDuration());
 				count += 1;
-			} else if (queueFull()) {
+			} else if (queueFull()) { //Otherwise if the queue is full: archive it
 				archiveNewVehicle(motorCycle);
-			} else {
+			} else { //Otherwise, queue it.
 				enterQueue(motorCycle);
 			}
 		}
@@ -597,10 +564,6 @@ public class CarPark {
 	 *             if vehicle is not in car park
 	 */
 
-	/*
-	 * problem with the way you implemented inPark variable it is meant to throw a vehicle exception if it is queued or
-	 * not parked or violates time constraints It throws simulation exception if the vehicle is not in car park
-	 */
 	public void unparkVehicle(Vehicle v, int departureTime) throws VehicleException, SimulationException {
 		boolean inPark = false; // Flag to say vehicle was found in car park.
 		for (int index = 0; index != spaces.size(); index++) // For vehicle in car park:
@@ -617,11 +580,11 @@ public class CarPark {
 				} else {
 					numCars -= 1;
 				}
-				if (typeSpaces.get(index) == "M") {
+				if (typeSpaces.get(index) == "M") { //If the vehicle parked in a motor cycle spot:
 					motorCycleSpots -= 1;
-				} else if (typeSpaces.get(index) == "S") {
+				} else if (typeSpaces.get(index) == "S") { //If the vehicle parked in a small spot:
 					smallSpots -= 1;
-				} else if (typeSpaces.get(index) == "N") {
+				} else if (typeSpaces.get(index) == "N") { //If the vehicle parked in a normal spot:
 					normalSpots -= 1;
 				}
 
