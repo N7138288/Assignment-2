@@ -55,7 +55,7 @@ public class Car extends Vehicle {
 
 	/* (non-Javadoc)
 	 * @see asgn2Vehicles.Vehicle#toString()
-	 */
+	 
 	@Override
 	public String toString() 
 	{
@@ -64,4 +64,5 @@ public class Car extends Vehicle {
 				+ this.getParkingTime()	+ " | Departure Time: " + this.getDepartureTime()
 				+ " | Satisfied: " + this.isSatisfied();
 	}
+	*/
 }

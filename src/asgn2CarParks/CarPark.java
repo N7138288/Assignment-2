@@ -157,7 +157,7 @@ public class CarPark {
 		for (int index = 0; index != queue.size(); index++) // For vehicle currently in the queue.
 		{
 			// If the vehicle has been in the queue too long.
-			if (time - queue.get(index).getArrivalTime() >= asgn2Simulators.Constants.MAXIMUM_QUEUE_TIME) {
+			if (time - queue.get(index).getArrivalTime() > asgn2Simulators.Constants.MAXIMUM_QUEUE_TIME) {
 				//Update vehicle status, adds the vehicle to archive, removes from queue
 				status += setVehicleMsg(queue.get(index), "Q", "A");
 				past.add(queue.get(index));
@@ -240,7 +240,6 @@ public class CarPark {
 				// Get the vehicle trying to leave queue
 				if (queue.get(loop) == v) 
 				{
-					status += setVehicleMsg(v, "Q", "N"); //Update vehicle status
 					v.exitQueuedState(exitTime); // Vehicle exits the queued state.
 					queue.remove(loop); // Vehicle is removed from the list of queued vehicles.
 					loop = queue.size() - 1; // Change the loop value to break the for loop.
@@ -368,7 +367,6 @@ public class CarPark {
 							"Simulation Exception: There are no car parks available for a motor cycle.");
 				} else // If there are small car park spots remaining: add motor cycle to small car park spots.
 				{
-					status += setVehicleMsg(v, "N", "P");
 					v.enterParkedState(time, intendedDuration);
 					spaces.add(v); // Add motor cycle to list of parked vehicles.
 					typeSpaces.add("S"); // Add small spot to list of used spots.
@@ -377,7 +375,6 @@ public class CarPark {
 				}
 			} else // If there are motor cycle spots remaining: add motor cycle to motor cycle spots.
 			{
-				status += setVehicleMsg(v, "N", "P"); //Update vehicle status
 				v.enterParkedState(time, intendedDuration); //Put the vehicle in a parked state
 				spaces.add(v); // Add motor cycle to list of parked vehicles.
 				typeSpaces.add("M"); // Add motor cycle spot to list of used spots.
@@ -394,7 +391,6 @@ public class CarPark {
 							"Simulation Exception: There are no car parks available for a small car.");
 				} else // If there are normal car park spots remaining: add small car to normal car park spots.
 				{
-					status += setVehicleMsg(v, "N", "P"); //Update vehicle status
 					v.enterParkedState(time, intendedDuration);
 					spaces.add(v); // Add motor cycle to list of parked vehicles.
 					typeSpaces.add("N"); // Add normal car spot to list of used spots.
@@ -404,7 +400,6 @@ public class CarPark {
 				}
 			} else // If there are small car spots remaining: add small car to small car spots.
 			{
-				status += setVehicleMsg(v, "N", "P"); //Update vehicle status
 				v.enterParkedState(time, intendedDuration);
 				spaces.add(v); // Add small car to list of parked vehicles.
 				typeSpaces.add("S"); // Add small car spot to list of used spots.
@@ -420,7 +415,6 @@ public class CarPark {
 						"Simulation Exception: There are no car parks available for a normal car.");
 			} else // If there are normal car park spots remaining: add normal car to normal car park spots.
 			{
-				status += setVehicleMsg(v, "N", "P"); //Update vehicle status
 				v.enterParkedState(time, intendedDuration);
 				spaces.add(v); // Add normal car to list of parked vehicles.
 				typeSpaces.add("N"); // Add normal car spot to list of used spots.
@@ -443,8 +437,7 @@ public class CarPark {
 	 *             if state is incorrect, or timing constraints are violated
 	 */	
 	public void processQueue(int time, Simulator sim) throws VehicleException, SimulationException {
-		boolean block = false;
-		
+		boolean block = false;		
 		//If the queue is empty stop processing the queue
 		while (block == false) { //This would loop until queue became empty, infinite loop?
 			if (queue.isEmpty()) {
@@ -454,6 +447,7 @@ public class CarPark {
 				block = true;
 			} else {
 				Vehicle v = queue.get(0); // Catch vehicle so can enter the car park after leaving queue
+				status += setVehicleMsg(v, "Q", "P"); //Update vehicle status
 				exitQueue(v, time);
 				parkVehicle(v, time, sim.setDuration()); // Enter car park after leaving queue.
 			}
@@ -492,10 +486,10 @@ public class CarPark {
 			return (!(motorCycleSpots + smallSpots == maxSmallCarSpaces + maxMotorCycleSpaces));
 		} else if (((Car) v).isSmall()) // If the vehicle is a small car:
 		{
-			return (!(smallSpots + normalSpots == maxCarSpaces - maxMotorCycleSpaces));
+			return (!(smallSpots + normalSpots == maxCarSpaces));
 		} else // If the vehicle is a normal car:
 		{
-			return (!(normalSpots == maxCarSpaces - maxMotorCycleSpaces - maxSmallCarSpaces));
+			return (!(normalSpots == maxCarSpaces - maxSmallCarSpaces));
 		}
 	}
 
@@ -524,13 +518,14 @@ public class CarPark {
 		if (sim.newCarTrial()) { // If a car is to be made
 			Car newCar;
 			if (sim.smallCarTrial()) { // If the car is a small car
-				newCar = new Car(Integer.toString(count), time, true); //Create Car with unique ID
+				newCar = new Car("C" + Integer.toString(count+1), time, true); //Create Car with unique ID
 			} 
 			else
 			{
-				newCar = new Car(Integer.toString(count), time, false); //Create Car with unique ID
+				newCar = new Car("C" + Integer.toString(count+1), time, false); //Create Car with unique ID
 			}
 			if (spacesAvailable(newCar)) { //Check if spaces available: if so park the car.
+				status += setVehicleMsg(newCar, "N", "P"); //Update vehicle status
 				parkVehicle(newCar, time, sim.setDuration());
 				count += 1;
 			} else if (queueFull()) { //Otherwise check the queue, if full archive the car.
@@ -540,8 +535,9 @@ public class CarPark {
 			}
 		}
 		if (sim.motorCycleTrial()) { //If a motor cycle is to be made
-			MotorCycle motorCycle = new MotorCycle(Integer.toString(count), time); //Create a motor cycle witha unique ID
+			MotorCycle motorCycle = new MotorCycle("MC" + Integer.toString(count+1), time); //Create a motor cycle witha unique ID
 			if (spacesAvailable(motorCycle)) { //If there are spaces available: park it
+				status += setVehicleMsg(motorCycle, "N", "P"); //Update vehicle status
 				parkVehicle(motorCycle, time, sim.setDuration());
 				count += 1;
 			} else if (queueFull()) { //Otherwise if the queue is full: archive it

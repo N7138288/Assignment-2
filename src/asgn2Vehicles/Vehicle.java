@@ -301,8 +301,7 @@ public abstract class Vehicle {
 	 * @return true if satisfied, false if never in parked state or if queuing time exceeds max allowable
 	 */
 	public boolean isSatisfied() {
-		if (exitTime - arrivalTime >= asgn2Simulators.Constants.MAXIMUM_QUEUE_TIME) // If the car was in queue too long:
-																					// return false:
+		if (exitTime - arrivalTime > asgn2Simulators.Constants.MAXIMUM_QUEUE_TIME) // If the car was in queue too long:																			// return false:
 		{
 			return false;
 		} else if (!everParked) // If the car never parked: return false:
@@ -321,7 +320,57 @@ public abstract class Vehicle {
 	 */
 	@Override
 	public String toString() {
-		return null;
+		String status = "";
+		status += "Vehicle vehID: " + vehID + "\n";
+		status += "Arrival Time: " + arrivalTime + "\n";
+		
+		if (everQueued)
+		{
+			status += "Exit from Queue: " + exitTime + "\n";
+			status += "Queuing Time: " + (exitTime - arrivalTime) + "\n";
+			if (exitTime - arrivalTime > Constants.MAXIMUM_QUEUE_TIME)
+			{
+				status += "Exceeded maximum acceptable queuing time by: " + ((exitTime - arrivalTime) - Constants.MAXIMUM_QUEUE_TIME) + "\n";
+			}
+		}
+		else
+		{
+			status += "Vehicle was not queued" + "\n";
+		}
+		
+		if (everParked)
+		{
+			status += "Entry to Car Park: " + parkingTime + "\n";
+			status += "Exit from Car Park: " + departureTime + "\n";
+			status += "Parking Time: " + (departureTime - parkingTime) + "\n";
+		}
+		else
+		{
+			status += "Vehicle was not parked" + "\n";
+		}
+		
+		status += "Customer was ";
+		if (isSatisfied() == false)
+		{
+			status += "not ";
+		}
+		status += "satisfied";
+		
+		if (this.getClass() == asgn2Vehicles.Car.class)
+		{
+			status += "\n";
+			status += "Car can";
+			if (((Car) this).isSmall() == false)
+			{
+				status += "not use small ";	
+			}
+			else
+			{
+				status += " use small car ";
+			}
+			status += "parking space";
+		}
+		return status;
 	}
 
 	/**

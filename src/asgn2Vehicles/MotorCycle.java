@@ -39,9 +39,10 @@ public class MotorCycle extends Vehicle {
 			this.arrivalTime = arrivalTime;
 		}
 	}
+	
 	/* (non-Javadoc)
 	 * @see asgn2Vehicles.Vehicle#toString()
-	 */
+	 
 	@Override
 	public String toString() 
 	{
@@ -50,4 +51,5 @@ public class MotorCycle extends Vehicle {
 				+ this.getParkingTime()	+ " | Departure Time: " + this.getDepartureTime()
 				+ " | Satisfied: " + this.isSatisfied();
 	}
+	*/
 }
