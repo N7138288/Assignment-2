@@ -18,7 +18,6 @@ import javax.swing.JFrame;
 import javax.swing.JTextField;
 
 import asgn2CarParks.CarPark;
-import asgn2Examples.RandomTimeSeries;
 import asgn2Exceptions.SimulationException;
 import asgn2Exceptions.VehicleException;
 
@@ -34,7 +33,7 @@ public class SimulationRunner {
 	
 	private Log log;
 	
-	private RandomTimeSeries tsc;
+	private ChartPanel tsc;
 	
 	/**
 	 * Constructor just does initialisation 
@@ -47,7 +46,7 @@ public class SimulationRunner {
 		this.sim = sim;
 		this.log = log;
 		
-		this.tsc = new RandomTimeSeries("Car Park Simulator");
+		this.tsc = new ChartPanel("Car Park Simulator");
 	}
 	
 	
@@ -60,7 +59,7 @@ public class SimulationRunner {
 	 */
 	public void runSimulation() throws VehicleException, SimulationException, IOException {
 		//Start chart
-		this.tsc.createTimeSeriesData();
+		this.tsc.createLineChartData();
 		
 		//
 		this.log.initialEntry(this.carPark,this.sim);
@@ -87,15 +86,15 @@ public class SimulationRunner {
 			this.log.logEntry(time,this.carPark);
 			
 			//Chart progress
-			this.tsc.addTimeSeriesData(time, this.carPark);
+			this.tsc.addLineChartData(time, this.carPark);
 		}
 		this.log.finalise(this.carPark);
 		
 		//Finalise Chart
-		this.tsc.concludeTimeSeriesData();
+		this.tsc.concludeLineChartData();
 		
 		//Show Chart
-		this.tsc.createChart();
+		this.tsc.createLineChart();
 	}
 
 	/**
