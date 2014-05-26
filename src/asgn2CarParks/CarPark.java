@@ -45,7 +45,6 @@ public class CarPark {
 	private int count = 0; // Total number of vehicles to have entered the system ever.
 	private int numDissatisfied = 0; // The number of vehicles to have been: turned away because queue is full OR turned
 										// away because waited in queue too long.
-	private int numQueue = 0; // The number of vehicles currently in the queue.
 	private int normalSpots = 0; // The number of vehicles currently parked in normal car spots.
 	private int smallSpots = 0; // The number of vehicles currently parked in small car spots.
 	private int motorCycleSpots = 0; // The number of vehicles currently parked in motorcycle spots.
@@ -164,7 +163,6 @@ public class CarPark {
 				past.get(past.size() - 1).exitQueuedState(time);
 				queue.remove(index);
 				index -= 1; // Prevents skipping indices after removal in list.
-				numQueue -= 1; // Number of vehicles in queue is incremented.
 				numDissatisfied += 1; // Number of Dissatisfied vehicles is incremented.
 			}
 		}
@@ -209,7 +207,6 @@ public class CarPark {
 			status += setVehicleMsg(v, "N", "Q"); //Update vehicle status
 			v.enterQueuedState(); // Vehicle enters the queued state.
 			queue.add(v); // Add Vehicle to the end of the queue.
-			numQueue += 1; // The number of vehicles in the queue is incremented.
 			count += 1; // The number of vehicles process is incremented.
 		}
 	}
@@ -243,7 +240,6 @@ public class CarPark {
 					v.exitQueuedState(exitTime); // Vehicle exits the queued state.
 					queue.remove(loop); // Vehicle is removed from the list of queued vehicles.
 					loop = queue.size() - 1; // Change the loop value to break the for loop.
-					numQueue -= 1; // The number of vehicles in the queue is incremented.
 				}
 			}
 		}
@@ -338,7 +334,7 @@ public class CarPark {
 	 * @return number of vehicles in the queue
 	 */
 	public int numVehiclesInQueue() {
-		return this.numQueue;
+		return queue.size();
 	}
 
 	/**
@@ -381,7 +377,8 @@ public class CarPark {
 				motorCycleSpots += 1; // Increment number of motor cycles spots used.
 				numMotorCycles += 1; // Increment number of motor cycles parked.
 			}
-		} else if (((Car) v).isSmall()) // If the vehicle is a small car:
+		}
+		else if (((Car) v).isSmall()) // If the vehicle is a small car:
 		{
 			if (smallSpots == maxSmallCarSpaces) // If there are no small car park spots remaining:
 			{
@@ -469,7 +466,7 @@ public class CarPark {
 	 * @return true if queue full, false otherwise
 	 */
 	public boolean queueFull() {
-		return (this.numQueue == this.maxQueueSize);
+		return (queue.size() == maxQueueSize);
 	}
 
 	/**
@@ -484,10 +481,12 @@ public class CarPark {
 		if (v.getClass() == asgn2Vehicles.MotorCycle.class) // If the vehicle is a motorcycle:
 		{
 			return (!(motorCycleSpots + smallSpots == maxSmallCarSpaces + maxMotorCycleSpaces));
-		} else if (((Car) v).isSmall()) // If the vehicle is a small car:
+		} 
+		else if (((Car) v).isSmall()) // If the vehicle is a small car:
 		{
 			return (!(smallSpots + normalSpots == maxCarSpaces));
-		} else // If the vehicle is a normal car:
+		} 
+		else // If the vehicle is a normal car:
 		{
 			return (!(normalSpots == maxCarSpaces - maxSmallCarSpaces));
 		}
@@ -588,7 +587,7 @@ public class CarPark {
 				v.exitParkedState(departureTime); // Vehicle is removed from the list of vehicles parked.
 				spaces.remove(index);
 				typeSpaces.remove(index);
-				index -= 1; // Prevents skipping indices after removal in list.
+				index = spaces.size() - 1; // Finishes loop immediately after finding vehicle.
 			}
 		}
 		if (!inPark) // If vehicle not found in car park: throw an exception.
