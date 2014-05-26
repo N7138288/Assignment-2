@@ -355,9 +355,9 @@ public class CarPark {
 	public void parkVehicle(Vehicle v, int time, int intendedDuration) throws SimulationException, VehicleException {
 		if (v.getClass() == asgn2Vehicles.MotorCycle.class) // If the vehicle is a motor cycle:
 		{
-			if (motorCycleSpots == maxMotorCycleSpaces) // If there are no motor cycle spots remaining:
+			if (motorCycleSpots >= maxMotorCycleSpaces) // If there are no motor cycle spots remaining:
 			{
-				if (smallSpots == maxSmallCarSpaces) // If there are no small car spots remaining: throw an exception.
+				if (smallSpots >= maxSmallCarSpaces) // If there are no small car spots remaining: throw an exception.
 				{
 					throw new SimulationException(
 							"Simulation Exception: There are no car parks available for a motor cycle.");
@@ -366,7 +366,7 @@ public class CarPark {
 					v.enterParkedState(time, intendedDuration);
 					spaces.add(v); // Add motor cycle to list of parked vehicles.
 					typeSpaces.add("S"); // Add small spot to list of used spots.
-					smallSpots += 1; // Increment number of motor cycles spots used.
+					smallSpots += 1; // Increment number of small spots used.
 					numMotorCycles += 1; // Increment number of motor cycles parked.
 				}
 			} else // If there are motor cycle spots remaining: add motor cycle to motor cycle spots.
@@ -380,9 +380,9 @@ public class CarPark {
 		}
 		else if (((Car) v).isSmall()) // If the vehicle is a small car:
 		{
-			if (smallSpots == maxSmallCarSpaces) // If there are no small car park spots remaining:
+			if (smallSpots >= maxSmallCarSpaces) // If there are no small car park spots remaining:
 			{
-				if (normalSpots == maxCarSpaces) // If there are no normal car park spots remaining: throw an exception.
+				if (normalSpots >= maxCarSpaces) // If there are no normal car park spots remaining: throw an exception.
 				{
 					throw new SimulationException(
 							"Simulation Exception: There are no car parks available for a small car.");
@@ -406,7 +406,7 @@ public class CarPark {
 			}
 		} else // else: this vehicle is a normal car:
 		{
-			if (normalSpots == maxCarSpaces) // If there are no normal car park spots remaining: throw an exception.
+			if (normalSpots >= maxCarSpaces) // If there are no normal car park spots remaining: throw an exception.
 			{
 				throw new SimulationException(
 						"Simulation Exception: There are no car parks available for a normal car.");
@@ -480,15 +480,15 @@ public class CarPark {
 	public boolean spacesAvailable(Vehicle v) {
 		if (v.getClass() == asgn2Vehicles.MotorCycle.class) // If the vehicle is a motorcycle:
 		{
-			return (!(motorCycleSpots + smallSpots == maxSmallCarSpaces + maxMotorCycleSpaces));
+			return (!(motorCycleSpots + smallSpots >= maxSmallCarSpaces + maxMotorCycleSpaces));
 		} 
 		else if (((Car) v).isSmall()) // If the vehicle is a small car:
 		{
-			return (!(smallSpots + normalSpots == maxCarSpaces));
+			return (!(smallSpots + normalSpots >= maxCarSpaces));
 		} 
 		else // If the vehicle is a normal car:
 		{
-			return (!(normalSpots == maxCarSpaces - maxSmallCarSpaces));
+			return (!(normalSpots >= maxCarSpaces - maxSmallCarSpaces));
 		}
 	}
 

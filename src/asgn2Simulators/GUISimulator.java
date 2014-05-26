@@ -86,7 +86,7 @@ public class GUISimulator extends JFrame implements Runnable {
 		this.setLayout(new GridBagLayout());
 		
 		// Create a scrollable text area for displaying instructions and messages
-		display = new JTextArea(5, 40); // lines by columns
+		display = new JTextArea(20, 60); // lines by columns
 		display.setEditable(false);
 		display.setLineWrap(true);
 		textScrollPane = new JScrollPane(display);
@@ -221,24 +221,24 @@ public class GUISimulator extends JFrame implements Runnable {
 			•	maxCarSpaces, maxMotorCycleSpaces, maxQueueSize >= 0
 			• 0 <= maxSmallCarSpaces <= maxCarSpaces
 			 */
-			if (Constants.DEFAULT_MAX_CAR_SPACES <= 0)
+			if (Constants.DEFAULT_MAX_CAR_SPACES < 0)
 			{
 				throw new SimulationException("Maximum car spaces must be non-negative, given "
 						+ Constants.DEFAULT_MAX_CAR_SPACES);
 			}
-			if (Constants.DEFAULT_MAX_MOTORCYCLE_SPACES <= 0)
+			if (Constants.DEFAULT_MAX_MOTORCYCLE_SPACES < 0)
 			{
 				throw new SimulationException("Maximum motor cycle spaces must be non-negative, given "
 						+ Constants.DEFAULT_MAX_MOTORCYCLE_SPACES);
 			}
-			if (Constants.DEFAULT_MAX_QUEUE_SIZE <= 0)
+			if (Constants.DEFAULT_MAX_QUEUE_SIZE < 0)
 			{
 				throw new SimulationException("Maximum queue size must be non-negative, given "
 						+ Constants.DEFAULT_MAX_QUEUE_SIZE);
 			}
-			if ((Constants.DEFAULT_MAX_SMALL_CAR_SPACES <= 0) || (Constants.DEFAULT_MAX_SMALL_CAR_SPACES >= Constants.DEFAULT_MAX_CAR_SPACES))
+			if ((Constants.DEFAULT_MAX_SMALL_CAR_SPACES < 0) || (Constants.DEFAULT_MAX_SMALL_CAR_SPACES > Constants.DEFAULT_MAX_CAR_SPACES))
 			{
-				throw new SimulationException("Maximum small car spaces must be non-negative and strictly less then the maximum car spaces, given "
+				throw new SimulationException("Maximum small car spaces must be non-negative and less then the maximum car spaces, given "
 						+ Constants.DEFAULT_MAX_SMALL_CAR_SPACES);
 			}
 			run();
