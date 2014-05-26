@@ -61,7 +61,7 @@ public class Car extends Vehicle {
 	public String toString() 
 	{
 		return "Vehicle: Car | vehID: " + this.vehID + " | Small: " + (this.small) + " | Arrival Time: "
-				+ this.getArrivalTime() + " | Exit Time: " + this.getExitTime() + " | Parking Time: " 
+				+ this.getArrivalTime() + " | Parking Time: " 
 				+ this.getParkingTime()	+ " | Departure Time: " + this.getDepartureTime()
 				+ " | Satisfied: " + this.isSatisfied();
 	}

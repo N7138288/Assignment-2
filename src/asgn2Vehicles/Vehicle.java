@@ -100,10 +100,6 @@ public abstract class Vehicle {
 	 *             less than the minimum prescribed in asgnSimulators.Constants
 	 */
 
-	// There is an error with this, it is not setting the car's state to parked
-	// Can't figure it out/am too tired
-
-	// Will check it in a sec - Jared
 	public void enterParkedState(int parkingTime, int intendedDuration) throws VehicleException {
 		boolean correctState = true; // Boolean used to determine if vehicle will exit queued state despite exceptions.
 		if ((parked) || (queued)) // Check to see if in incorrect state: parked or false.
@@ -250,15 +246,6 @@ public abstract class Vehicle {
 	 */
 	public int getArrivalTime() {
 		return arrivalTime;
-	}
-
-	// I made this, not part of spec
-	/**Simple getter for the exit time of a vehicle
-	 * 
-	 * @return the exitTime
-	 */
-	public int getExitTime() {
-		return exitTime;
 	}
 
 	/**

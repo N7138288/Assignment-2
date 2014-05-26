@@ -40,8 +40,7 @@ import asgn2Exceptions.SimulationException;
  *
  */
 @SuppressWarnings("serial")
-public class GUISimulator extends JFrame implements Runnable, ActionListener {
-
+public class GUISimulator extends JFrame implements Runnable {
 	//Parameter Setup
 	
 	// Display for simulation messages
@@ -114,7 +113,15 @@ public class GUISimulator extends JFrame implements Runnable, ActionListener {
 		
 		// Button for starting the simulation
 		startButton = new JButton("Start");
-		startButton.addActionListener(this);
+		startButton.addActionListener(new ActionListener() 
+		{   
+          //Handle JButton event if Enter key is pressed or if mouse is clicked.  
+          public void actionPerformed(ActionEvent event) 
+          {
+        	  startSimulation();
+          }
+		}
+		);
 		buttons.add(startButton);
 	}
 	
@@ -191,38 +198,6 @@ public class GUISimulator extends JFrame implements Runnable, ActionListener {
 		return constraints;
 	}
 	
-	/*
-	 * Perform an appropriate action when a button is pushed
-	 */
-	public void actionPerformed(ActionEvent event) {
-		
-		// Get event's source 
-		Object source = event.getSource(); 
-
-		//Consider the alternatives (not all are available at once) 
-		if (source == startButton)
-		{
-			startSimulation();
-		}
-		/*
-		else if (source == halfReleaseButton)
-		{
-			simulateOneDay(Selection.HALF);
-			checkForEndOfSimulation();
-		}
-		else if (source == defaultReleaseButton)
-		{
-			simulateOneDay(Selection.DEFAULT);
-			checkForEndOfSimulation();
-		}
-		else if (source == doubleReleaseButton)
-		{
-			simulateOneDay(Selection.DOUBLE);
-			checkForEndOfSimulation();
-		};
-		*/
-	}
-	
 	private void startSimulation()
 	{
 		try
@@ -265,26 +240,8 @@ public class GUISimulator extends JFrame implements Runnable, ActionListener {
 				throw new SimulationException("Maximum small car spaces must be non-negative and strictly less then the maximum car spaces, given "
 						+ Constants.DEFAULT_MAX_SMALL_CAR_SPACES);
 			}
-			
-			//Run the simulation 
-			CarPark cp = new CarPark();
-			Simulator s = null;
-			Log l = null; 
-			try {
-				s = new Simulator();
-				l = new Log();
-			} catch (IOException | SimulationException e1) {
-				e1.printStackTrace();
-				System.exit(-1);
-			}
-			
-			SimulationRunner sr = new SimulationRunner(cp,s,l);
-			try {
-				sr.runSimulation();
-			} catch (Exception e) {
-				e.printStackTrace();
-				System.exit(-1);
-			} 
+			run();
+
 		}	
 		catch (NumberFormatException exception) // User has entered an invalid number
 		{
@@ -298,7 +255,24 @@ public class GUISimulator extends JFrame implements Runnable, ActionListener {
 
 	@Override
 	public void run() {
-		// TODO Auto-generated method stub
+		//Run the simulation 
+		CarPark cp = new CarPark();
+		Simulator s = null;
+		Log l = null; 
+		try {
+			s = new Simulator();
+			l = new Log();
+		} catch (IOException | SimulationException e1) {
+			e1.printStackTrace();
+			System.exit(-1);
+		}
 		
+		SimulationRunner sr = new SimulationRunner(cp,s,l);
+		try {
+			sr.runSimulation();
+		} catch (Exception e) {
+			e.printStackTrace();
+			System.exit(-1);
+		} 
 	}
 }

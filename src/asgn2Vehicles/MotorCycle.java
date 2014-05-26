@@ -46,7 +46,7 @@ public class MotorCycle extends Vehicle {
 	public String toString() 
 	{
 		return "Vehicle: Motor Cycle | vehID: " + this.vehID + " | Arrival Time: "
-				+ this.getArrivalTime() + " | Exit Time: " + this.getExitTime() + " | Parking Time: " 
+				+ this.getArrivalTime() + " | Parking Time: " 
 				+ this.getParkingTime()	+ " | Departure Time: " + this.getDepartureTime()
 				+ " | Satisfied: " + this.isSatisfied();
 	}
