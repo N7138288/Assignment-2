@@ -18,6 +18,7 @@ import javax.swing.JFrame;
 import javax.swing.JTextField;
 
 import asgn2CarParks.CarPark;
+import asgn2Examples.RandomTimeSeries;
 import asgn2Exceptions.SimulationException;
 import asgn2Exceptions.VehicleException;
 
@@ -33,6 +34,8 @@ public class SimulationRunner {
 	
 	private Log log;
 	
+	private RandomTimeSeries tsc;
+	
 	/**
 	 * Constructor just does initialisation 
 	 * @param carPark CarPark currently used 
@@ -43,6 +46,8 @@ public class SimulationRunner {
 		this.carPark = carPark;
 		this.sim = sim;
 		this.log = log;
+		
+		this.tsc = new RandomTimeSeries("Car Park Simulator");
 	}
 	
 	
@@ -54,6 +59,10 @@ public class SimulationRunner {
 	 * @throws IOException on logging failures
 	 */
 	public void runSimulation() throws VehicleException, SimulationException, IOException {
+		//Start chart
+		this.tsc.createTimeSeriesData();
+		
+		//
 		this.log.initialEntry(this.carPark,this.sim);
 		for (int time=0; time<=Constants.CLOSING_TIME; time++) {
 			//queue elements exceed max waiting time
@@ -76,8 +85,17 @@ public class SimulationRunner {
 			}
 			//Log progress 
 			this.log.logEntry(time,this.carPark);
+			
+			//Chart progress
+			this.tsc.addTimeSeriesData(time, this.carPark);
 		}
 		this.log.finalise(this.carPark);
+		
+		//Finalise Chart
+		this.tsc.concludeTimeSeriesData();
+		
+		//Show Chart
+		this.tsc.createChart();
 	}
 
 	/**

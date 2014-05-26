@@ -10,6 +10,7 @@
  */
 package asgn2CarParks;
 
+import java.awt.Component;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -625,5 +626,21 @@ public class CarPark {
 			str += "M";
 		}
 		return "|" + str + ":" + source + ">" + target + "|";
+	}
+
+	public int getCount() {
+		return count;
+	}
+
+	public List<Vehicle> getQueue() {
+		return queue;
+	}
+
+	public List<Vehicle> getPast() {
+		return past;
+	}
+
+	public int getNumDissatisfied() {
+		return numDissatisfied;
 	}
 }

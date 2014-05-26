@@ -33,6 +33,7 @@ import org.jfree.chart.axis.ValueAxis;
 import org.jfree.chart.plot.XYPlot;
 import org.jfree.data.time.DynamicTimeSeriesCollection;
 import org.jfree.data.time.Minute;
+import org.jfree.data.time.RegularTimePeriod;
 import org.jfree.data.time.Second;
 import org.jfree.data.time.TimeSeries;
 import org.jfree.data.time.TimeSeriesCollection;
@@ -40,6 +41,7 @@ import org.jfree.data.xy.XYDataset;
 import org.jfree.ui.ApplicationFrame;
 import org.jfree.ui.RefineryUtilities;
 
+import asgn2CarParks.CarPark;
 /** 
  * Example code based on the Stack Overflow example and the 
  * standard JFreeChart demos showing the construction of a time series 
@@ -51,94 +53,82 @@ import org.jfree.ui.RefineryUtilities;
 @SuppressWarnings("serial")
 public class RandomTimeSeries extends ApplicationFrame {
 
-    private static final String TITLE = "Random Car Park";
-    
+     private String TITLE;
+     TimeSeriesCollection tsc;
+	 TimeSeries totalVehicles;
+	 TimeSeries parkedVehicles;
+	 TimeSeries parkedCars;
+	 TimeSeries parkedSmallCars;
+	 TimeSeries parkedMotorCycles;
+	 TimeSeries queuedVehicles;
+	 TimeSeries archivedVehicles;
+	 TimeSeries dissatisfiedVehicles
+	 ;
     /**
      * Constructor shares the work with the run method. 
      * @param title Frame display title
      */
-    public RandomTimeSeries(final String title) {
-        super(title);
-        final TimeSeriesCollection dataset = createTimeSeriesData(); 
-        JFreeChart chart = createChart(dataset);
-        this.add(new ChartPanel(chart), BorderLayout.CENTER);
-        JPanel btnPanel = new JPanel(new FlowLayout());
-        this.add(btnPanel, BorderLayout.SOUTH);
+    public RandomTimeSeries(String title) {
+    	super(title);
+    	TITLE = title;
     }
 
     /**
      * Private method creates the dataset. Lots of hack code in the 
      * middle, but you should use the labelled code below  
+     * @return 
 	 * @return collection of time series for the plot 
 	 */
-	private TimeSeriesCollection createTimeSeriesData() {
-		TimeSeriesCollection tsc = new TimeSeriesCollection(); 
-		TimeSeries vehTotal = new TimeSeries("Total Vehicles");
-		TimeSeries carTotal = new TimeSeries("Total Cars"); 
-		TimeSeries mcTotal = new TimeSeries("MotorCycles");
+	public void createTimeSeriesData() {
+		tsc = new TimeSeriesCollection(); 	
+		 totalVehicles = new TimeSeries("Total Vehicles to Date");
+		 parkedVehicles = new TimeSeries("Total Vehicles Parked");
+		 parkedCars = new TimeSeries("Total Cars Parked");
+		 parkedSmallCars = new TimeSeries("Total Small Cars Parked");
+		 parkedMotorCycles = new TimeSeries("Total Motor Cycles Parked");
+		 queuedVehicles = new TimeSeries("Total Vehicles Queued");
+		 archivedVehicles = new TimeSeries("Total Vehicles Archived");
+		 dissatisfiedVehicles = new TimeSeries("Total Vehicles Dissatisfied");
+	}
+		 
 		
-		//Base time, data set up - the calendar is needed for the time points
-		Calendar cal = GregorianCalendar.getInstance();
-		Random rng = new Random(250); 
-		
-		int cars = 0;
-		int mc = 0; 
-		
-		//Hack loop to make it interesting. Grows for half of it, then declines
-		for (int i=0; i<=18*60; i++) {
+		//For each unit of time:
+		//e.g. 
+		public void addTimeSeriesData(int time, CarPark cp)
+		{
 			//These lines are important 
-			cal.set(2014,0,1,6,i);
-	        Date timePoint = cal.getTime();
-	        
-	        //HACK BEGINS
-	        if (i<9*60) {
-	        	if (randomSuccess(0.2,rng)) {
-	        		cars++; 
-	        	}
-	        	if (randomSuccess(0.1,rng)) {
-	        		mc++;
-	        	}
-	        } else if (i < 18*60) {
-	        	if (randomSuccess(0.15,rng)) {
-	        		cars++; 
-	        	} else if (randomSuccess(0.4,rng)) {
-	        		cars = Math.max(cars-1,0);
-	        	}
-	        	if (randomSuccess(0.05,rng)) {
-	        		mc++; 
-	        	} else if (randomSuccess(0.2,rng)) {
-	        		mc = Math.max(mc-1,0);
-	        	}
-	        } else {
-	        	cars=0; 
-	        	mc =0;
-	        }
-	        //HACK ENDS
-	        
-	        //This is important - steal it shamelessly 
-			mcTotal.add(new Minute(timePoint),mc);
-			carTotal.add(new Minute(timePoint),cars);
-			vehTotal.add(new Minute(timePoint),cars+mc);
+			Calendar cal = GregorianCalendar.getInstance();
+			cal.set(2014,0,1,6,time);
+		    Date timePoint = cal.getTime();
+		    
+		   new Minute(timePoint);
+			totalVehicles.add(new Minute(timePoint), cp.getCount());
+		 	parkedVehicles.add(new Minute(timePoint), cp.getNumCars() + cp.getNumMotorCycles());
+		 	parkedCars.add(new Minute(timePoint), cp.getNumCars());
+		 	parkedSmallCars.add(new Minute(timePoint),cp.getNumSmallCars());
+		 	parkedMotorCycles.add(new Minute(timePoint),cp.getNumMotorCycles());
+		 	queuedVehicles.add(new Minute(timePoint),cp.getQueue().size());
+		 	archivedVehicles.add(new Minute(timePoint),cp.getPast().size());
+		 	dissatisfiedVehicles.add(new Minute(timePoint), cp.getNumDissatisfied());
 		}
 		
-		//Collection
-		tsc.addSeries(vehTotal);
-		tsc.addSeries(carTotal);
-		tsc.addSeries(mcTotal);
-		return tsc; 
-	}
+		//Add series to tsc.
+		//Do this only once the time is done
+		//e.g.
+		public TimeSeriesCollection concludeTimeSeriesData()
+		{
+			tsc.addSeries(totalVehicles);
+			tsc.addSeries(parkedVehicles);
+			tsc.addSeries(parkedCars);
+			tsc.addSeries(parkedSmallCars);
+			tsc.addSeries(parkedMotorCycles);
+			tsc.addSeries(queuedVehicles);
+			tsc.addSeries(archivedVehicles);
+			tsc.addSeries(dissatisfiedVehicles);
+			
+			return tsc;
+		}
 	
-	/**
-	 * Utility method to implement a <a href="http://en.wikipedia.org/wiki/Bernoulli_trial">Bernoulli Trial</a>, 
-	 * a coin toss with two outcomes: success (probability successProb) and failure (probability 1-successProb)
-	 * @param successProb double holding the success probability 
-	 * @param rng Random object 
-	 * @return true if trial was successful, false otherwise
-	 */
-	private boolean randomSuccess(double successProb,Random rng) {
-		boolean result = rng.nextDouble() <= successProb;
-		return result;
-	}
 
     /**
      * Helper method to deliver the Chart - currently uses default colours and auto range 
@@ -155,20 +145,16 @@ public class RandomTimeSeries extends ApplicationFrame {
         range.setAutoRange(true);
         return result;
     }
-
-    /**
-     * Simple main GUI runner 
-     * @param args ignored 
-     */
-    public static void main(final String[] args) {
-        EventQueue.invokeLater(new Runnable() {
-            @Override
-            public void run() {
-                RandomTimeSeries demo = new RandomTimeSeries(TITLE);
-                demo.pack();
-                RefineryUtilities.centerFrameOnScreen(demo);
-                demo.setVisible(true);
-            }
-        });
+    
+    public void createChart()
+    {
+    	JFreeChart chart = createChart(tsc);
+    	this.add(new ChartPanel(chart), BorderLayout.CENTER);
+    	JPanel btnPanel = new JPanel(new FlowLayout());
+    	this.add(btnPanel, BorderLayout.SOUTH);
+    	this.pack();
+    	RefineryUtilities.centerFrameOnScreen(this);
+    	this.setVisible(true);
     }
+    //
 }

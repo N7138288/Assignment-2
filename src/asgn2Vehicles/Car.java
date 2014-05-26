@@ -38,7 +38,6 @@ public class Car extends Vehicle {
 		}
 		else //else: Assign vehicle parameters:
 		{
-			
 			this.vehID = vehID;
 			this.small = small;
 			this.arrivalTime = arrivalTime;

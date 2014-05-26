@@ -113,6 +113,7 @@ public class GUISimulator extends JFrame implements Runnable {
 		
 		// Button for starting the simulation
 		startButton = new JButton("Start");
+		buttons.add(startButton);
 		startButton.addActionListener(new ActionListener() 
 		{   
           //Handle JButton event if Enter key is pressed or if mouse is clicked.  
@@ -122,7 +123,7 @@ public class GUISimulator extends JFrame implements Runnable {
           }
 		}
 		);
-		buttons.add(startButton);
+
 	}
 	
 	/*
