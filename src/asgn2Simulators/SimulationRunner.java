@@ -87,6 +87,8 @@ public class SimulationRunner {
 			
 			//Chart progress
 			this.tsc.addLineChartData(time, this.carPark);
+			
+			GUISimulator.appendDisplay(this.carPark.getStatus(time));
 		}
 		this.log.finalise(this.carPark);
 		

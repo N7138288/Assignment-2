@@ -44,7 +44,7 @@ public class GUISimulator extends JFrame implements Runnable {
 	//Parameter Setup
 	
 	// Display for simulation messages
-	private JTextArea display;           
+	private static JTextArea display;           
 	private JScrollPane textScrollPane; 
 	
 	//Text Fields: Things to be changed via entering data and command line
@@ -137,7 +137,7 @@ public class GUISimulator extends JFrame implements Runnable {
 	 * Convenience method for adding text to the display area without
 	 * overwriting what's already there
 	 */
-	private void appendDisplay(String newText) {
+	public static void appendDisplay(String newText) {
 		display.setText(display.getText() + newText);
 	}
 	
