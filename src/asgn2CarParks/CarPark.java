@@ -152,7 +152,7 @@ public class CarPark {
 	 *             if one or more vehicles not in the correct state or if timing constraints are violated
 	 */
 	public void archiveQueueFailures(int time) throws VehicleException {
-		// With no vehicles being inputted here, I'm guessing this is the solution?
+		// With no vehicles being input here, I'm guessing this is the solution?
 		for (int index = 0; index != queue.size(); index++) // For vehicle currently in the queue.
 		{
 			// If the vehicle has been in the queue too long.

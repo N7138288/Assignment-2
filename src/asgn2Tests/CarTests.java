@@ -30,70 +30,38 @@ public class CarTests {
 	
 	Car testCar;
 
-	/**
-	 * @throws java.lang.Exception
-	 */
-	@Before
-	public void setUp() throws Exception {
-	}
-
-	/**
-	 * @throws java.lang.Exception
-	 */
-	@After
-	public void tearDown() throws Exception {
-	}
-
-	/**
-	 * Test method for {@link asgn2Vehicles.Car#toString()}.
-	 * @throws VehicleException 
-	 */
-	
+	//Check exception for negative arrival time
 	@Test(expected = VehicleException.class)
 	public void negArrivalTime() throws VehicleException {
 		testCar = new Car("111AAA", -1, false);
 	}
 	
+	//Check exception for zero arrival time
 	@Test(expected = VehicleException.class)
 	public void zeroArrivalTime() throws VehicleException {
 		testCar = new Car("111AAA", 0, false);
 	}
 	
+	//Test setting the car to small changes parameters
 	@Test
 	public void isSmallCar() throws VehicleException {
 		testCar = new Car("111AAA", 20, true);
 		assertTrue(testCar.isSmall());
 	}
 	
+	//Check that normal car is input as a normal car
 	@Test
 	public void isNormalCar() throws VehicleException {
 		testCar = new Car("111AAA", 20, false);
 		assertFalse(testCar.isSmall());
 	}
 	
+	//Test the arrival time of car is working properly
 	@Test
 	public void checkArrivalTime() throws VehicleException {
 		testCar = new Car("111AAA", 20, false);
 		assertEquals(testCar.getArrivalTime(), 20);
 	}
-	
-	
-	/**
-	@Test
-	public void testToString() {
-		fail("Not yet implemented"); // TODO
-	}
-
-
-	@Test
-	public void testCar() {
-		fail("Not yet implemented"); // TODO
-	}
-
-	@Test
-	public void testIsSmall() {
-		fail("Not yet implemented"); // TODO
-	}  */
 
 	/* CarTests.java */ 
 	/*

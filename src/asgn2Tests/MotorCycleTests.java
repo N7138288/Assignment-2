@@ -49,161 +49,31 @@ public class MotorCycleTests {
 	 * Test method for {@link asgn2Vehicles.MotorCycle#MotorCycle(java.lang.String, int)}.
 	 */
 	
+	//Check exception on negative arrival time
 	@Test(expected = VehicleException.class)
 	public void negArrivalTime() throws VehicleException {
 		testBike = new MotorCycle("111AAA", -1);
 	}
 	
+	//Check exception on zero arrival time
 	@Test(expected = VehicleException.class)
 	public void zeroArrivalTime() throws VehicleException {
 		testBike = new MotorCycle("111AAA", 0);
 	}
 	
+	//Test the arrival time works
 	@Test
 	public void checkArrivalTime() throws VehicleException {
 		testBike = new MotorCycle("111AAA", 50);
 		assertEquals(testBike.getArrivalTime(), 50);
 	}
 	
+	//Test motorcycle creation parameters
 	@Test
 	public void notParkedCreation() throws VehicleException {
 		testBike = new MotorCycle("111AAA", 50);
 		assertFalse(testBike.isParked());
 	}
-	/**
-	@Test
-	public void testMotorCycle() {
-		fail("Not yet implemented"); // TODO
-	}
-
-	/**
-	 * Test method for {@link asgn2Vehicles.Vehicle#Vehicle(java.lang.String, int)}.
-	 
-	@Test
-	public void testVehicle() {
-		fail("Not yet implemented"); // TODO
-	}
-
-	/**
-	 * Test method for {@link asgn2Vehicles.Vehicle#getVehID()}.
-	 
-	@Test
-	public void testGetVehID() {
-		fail("Not yet implemented"); // TODO
-	}
-
-	/**
-	 * Test method for {@link asgn2Vehicles.Vehicle#getArrivalTime()}.
-	 
-	@Test
-	public void testGetArrivalTime() {
-		fail("Not yet implemented"); // TODO
-	}
-
-	/**
-	 * Test method for {@link asgn2Vehicles.Vehicle#enterQueuedState()}.
-	 
-	@Test
-	public void testEnterQueuedState() {
-		fail("Not yet implemented"); // TODO
-	}
-
-	/**
-	 * Test method for {@link asgn2Vehicles.Vehicle#exitQueuedState(int)}.
-	 
-	@Test
-	public void testExitQueuedState() {
-		fail("Not yet implemented"); // TODO
-	}
-
-	/**
-	 * Test method for {@link asgn2Vehicles.Vehicle#enterParkedState(int, int)}.
-	 
-	@Test
-	public void testEnterParkedState() {
-		fail("Not yet implemented"); // TODO
-	}
-
-	/**
-	 * Test method for {@link asgn2Vehicles.Vehicle#exitParkedState(int)}.
-	 
-	@Test
-	public void testExitParkedStateInt() {
-		fail("Not yet implemented"); // TODO
-	}
-
-	/**
-	 * Test method for {@link asgn2Vehicles.Vehicle#exitParkedState()}.
-	 
-	@Test
-	public void testExitParkedState() {
-		fail("Not yet implemented"); // TODO
-	}
-
-	/**
-	 * Test method for {@link asgn2Vehicles.Vehicle#isParked()}.
-	 
-	@Test
-	public void testIsParked() {
-		fail("Not yet implemented"); // TODO
-	}
-
-	/**
-	 * Test method for {@link asgn2Vehicles.Vehicle#isQueued()}.
-	 
-	@Test
-	public void testIsQueued() {
-		fail("Not yet implemented"); // TODO
-	}
-
-	/**
-	 * Test method for {@link asgn2Vehicles.Vehicle#getParkingTime()}.
-	 
-	@Test
-	public void testGetParkingTime() {
-		fail("Not yet implemented"); // TODO
-	}
-
-	/**
-	 * Test method for {@link asgn2Vehicles.Vehicle#getDepartureTime()}.
-	 
-	@Test
-	public void testGetDepartureTime() {
-		fail("Not yet implemented"); // TODO
-	}
-
-	/**
-	 * Test method for {@link asgn2Vehicles.Vehicle#wasQueued()}.
-	 
-	@Test
-	public void testWasQueued() {
-		fail("Not yet implemented"); // TODO
-	}
-
-	/**
-	 * Test method for {@link asgn2Vehicles.Vehicle#wasParked()}.
-	 
-	@Test
-	public void testWasParked() {
-		fail("Not yet implemented"); // TODO
-	}
-
-	/**
-	 * Test method for {@link asgn2Vehicles.Vehicle#isSatisfied()}.
-	 
-	@Test
-	public void testIsSatisfied() {
-		fail("Not yet implemented"); // TODO
-	}
-
-	/**
-	 * Test method for {@link asgn2Vehicles.Vehicle#toString()}.
-	 
-	@Test
-	public void testToString() {
-		fail("Not yet implemented"); // TODO
-	}*/
-
 
 	/* MotorCycleTEsts */
 	/*
