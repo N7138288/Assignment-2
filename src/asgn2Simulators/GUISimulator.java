@@ -241,6 +241,20 @@ public class GUISimulator extends JFrame implements Runnable {
 				throw new SimulationException("Maximum small car spaces must be non-negative and less then the maximum car spaces, given "
 						+ Constants.DEFAULT_MAX_SMALL_CAR_SPACES);
 			}
+			
+			//Disable things on successful run
+			defaultSeedText.setEnabled(false);
+			defaultCarProbText.setEnabled(false);
+			defaultSmallCarProbText.setEnabled(false);
+			defaultMotorCycleProbText.setEnabled(false);
+			defaultIntendedMeanText.setEnabled(false);
+			defaultIntendedSDText.setEnabled(false);
+			defaultSpacesText.setEnabled(false);
+			defaultSmallSpacesText.setEnabled(false);
+			defaultMotorCycleSpacesText.setEnabled(false);
+			defaultMaxQueueText.setEnabled(false);
+			startButton.setEnabled(false);
+			
 			run();
 
 		}	
