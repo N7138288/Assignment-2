@@ -1,4 +1,4 @@
-20140527_161517: Start of Simulation
+20140527_190047: Start of Simulation
 Simulator [meanStay=120.0, sdStay=39.6, seed=100, carProb=1.0, smallCarProb=0.2, mcProb=0.05]
 CarPark [maxCarSpaces: 100 maxSmallCarSpaces: 20 maxMotorCycleSpaces: 20 maxQueueSize: 10]
 
@@ -1084,7 +1084,7 @@ CarPark [maxCarSpaces: 100 maxSmallCarSpaces: 20 maxMotorCycleSpaces: 20 maxQueu
 1079::1066::P:62::C:58::S:15::M:4::D:148::A:1004::Q:0|S:P>A|
 1080::1066::P:0::C:0::S:0::M:0::D:148::A:1066::Q:0|S:P>A||C:P>A||C:P>A||C:P>A||S:P>A||M:P>A||C:P>A||C:P>A||C:P>A||S:P>A||M:P>A||C:P>A||M:P>A||C:P>A||C:P>A||C:P>A||C:P>A||C:P>A||C:P>A||C:P>A||S:P>A||S:P>A||S:P>A||C:P>A||C:P>A||S:P>A||C:P>A||C:P>A||S:P>A||S:P>A||C:P>A||C:P>A||C:P>A||C:P>A||C:P>A||C:P>A||C:P>A||C:P>A||S:P>A||C:P>A||C:P>A||C:P>A||C:P>A||S:P>A||C:P>A||C:P>A||C:P>A||S:P>A||C:P>A||C:P>A||C:P>A||M:P>A||C:P>A||C:P>A||S:P>A||C:P>A||S:P>A||C:P>A||C:P>A||S:P>A||C:P>A||C:P>A|
 
-20140527_161519: End of Simulation
+20140527_190049: End of Simulation
 Vehicles Processed: count:1066, logged: 1066
 Vehicle Record: 
 Vehicle vehID: C18
