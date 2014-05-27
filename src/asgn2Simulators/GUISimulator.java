@@ -42,22 +42,23 @@ import asgn2Exceptions.SimulationException;
 @SuppressWarnings("serial")
 public class GUISimulator extends JFrame implements Runnable {
 	//Parameter Setup
-	SimulationRunner sr;
+	private SimulationRunner sr;
 	// Display for simulation messages
 	private static JTextArea display;           
 	private JScrollPane textScrollPane; 
 	
 	//Text Fields: Things to be changed via entering data and command line
-	JTextField defaultSeedText; //Default Seed
-	JTextField defaultCarProbText; //Default Car Probability
-	JTextField defaultSmallCarProbText; //Default Small Car Probability
-	JTextField defaultMotorCycleProbText; //Default Motor Cycle Probability
-	JTextField defaultIntendedMeanText; //Default Intended Stay Mean
-	JTextField defaultIntendedSDText; //Default Intended Stay Standard Deviation
-	JTextField defaultSpacesText; //Default Maximum Car Spaces
-	JTextField defaultSmallSpacesText; //Default Maximum Small Car Spaces
-	JTextField defaultMotorCycleSpacesText; //Default Maximum Motor Cycle Spaces
-	JTextField defaultMaxQueueText; //Default Maximum Queue Size
+	//Public to allow being set in command line.
+	public JTextField defaultSeedText; //Default Seed
+	public JTextField defaultCarProbText; //Default Car Probability
+	public JTextField defaultSmallCarProbText; //Default Small Car Probability
+	public JTextField defaultMotorCycleProbText; //Default Motor Cycle Probability
+	public JTextField defaultIntendedMeanText; //Default Intended Stay Mean
+	public JTextField defaultIntendedSDText; //Default Intended Stay Standard Deviation
+	public JTextField defaultSpacesText; //Default Maximum Car Spaces
+	public JTextField defaultSmallSpacesText; //Default Maximum Small Car Spaces
+	public JTextField defaultMotorCycleSpacesText; //Default Maximum Motor Cycle Spaces
+	public JTextField defaultMaxQueueText; //Default Maximum Queue Size
 	
 	//Start button
 	private JButton startButton;
@@ -96,16 +97,26 @@ public class GUISimulator extends JFrame implements Runnable {
 		resetDisplay("Set the initial simulation parameters and press 'Start'\n\n");
 
 		// Add editable panels for simulation parameters
-		defaultSeedText = addParameterPanel("Random number seed:", Constants.DEFAULT_SEED);
-		defaultCarProbText = addParameterPanel("Default car probability:", Constants.DEFAULT_CAR_PROB);
-		defaultSmallCarProbText = addParameterPanel("Default small car probability:", Constants.DEFAULT_SMALL_CAR_PROB);
-		defaultMotorCycleProbText = addParameterPanel("Default motor cycle probability:", Constants.DEFAULT_MOTORCYCLE_PROB);
-		defaultIntendedMeanText = addParameterPanel("Default intended stay mean:", Constants.DEFAULT_INTENDED_STAY_MEAN);
-		defaultIntendedSDText = addParameterPanel("Default intended stay standard deviation:", Constants.DEFAULT_INTENDED_STAY_SD);
-		defaultSpacesText = addParameterPanel("Default maximum car spaces:", Constants.DEFAULT_MAX_CAR_SPACES);
-		defaultSmallSpacesText = addParameterPanel("Default maximum small car spaces:", Constants.DEFAULT_MAX_SMALL_CAR_SPACES);
-		defaultMotorCycleSpacesText = addParameterPanel("Default maximum motor cycle spaces:", Constants.DEFAULT_MAX_MOTORCYCLE_SPACES);
-		defaultMaxQueueText = addParameterPanel("Default maximum queue:", Constants.DEFAULT_MAX_QUEUE_SIZE);
+		defaultSeedText = addParameterPanel("Random number seed:",
+				Constants.DEFAULT_SEED);
+		defaultCarProbText = addParameterPanel("Default car probability:",
+				Constants.DEFAULT_CAR_PROB);
+		defaultSmallCarProbText = addParameterPanel("Default small car probability:",
+				Constants.DEFAULT_SMALL_CAR_PROB);
+		defaultMotorCycleProbText = addParameterPanel("Default motor cycle probability:", 
+				Constants.DEFAULT_MOTORCYCLE_PROB);
+		defaultIntendedMeanText = addParameterPanel("Default intended stay mean:", 
+				Constants.DEFAULT_INTENDED_STAY_MEAN);
+		defaultIntendedSDText = addParameterPanel("Default intended stay standard deviation:",
+				Constants.DEFAULT_INTENDED_STAY_SD);
+		defaultSpacesText = addParameterPanel("Default maximum car spaces:", 
+				Constants.DEFAULT_MAX_CAR_SPACES);
+		defaultSmallSpacesText = addParameterPanel("Default maximum small car spaces:", 
+				Constants.DEFAULT_MAX_SMALL_CAR_SPACES);
+		defaultMotorCycleSpacesText = addParameterPanel("Default maximum motor cycle spaces:",
+				Constants.DEFAULT_MAX_MOTORCYCLE_SPACES);
+		defaultMaxQueueText = addParameterPanel("Default maximum queue:",
+				Constants.DEFAULT_MAX_QUEUE_SIZE);
 		
 		// Panel to contain the buttons
 		buttons = new JPanel(new GridBagLayout());
@@ -269,7 +280,8 @@ public class GUISimulator extends JFrame implements Runnable {
 			}
 			if ((maxSmallCarSpaces < 0) || (maxSmallCarSpaces > maxCarspaces))
 			{
-				throw new SimulationException("Maximum small car spaces must be non-negative and less then the maximum car spaces, given "
+				throw new SimulationException("Maximum small car spaces must be non-negative and less "
+						+ "then the maximum car spaces, given "
 						+ maxSmallCarSpaces);
 			}
 			

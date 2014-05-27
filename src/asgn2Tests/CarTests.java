@@ -74,7 +74,8 @@ public class CarTests {
 		//Car Class implements Vehicle, adds isSmall() 
 		final int NumVehicleClassMethods = Array.getLength(Vehicle.class.getMethods());
 		final int NumCarClassMethods = Array.getLength(Car.class.getMethods());
-		assertTrue("veh:"+NumVehicleClassMethods+":car:"+NumCarClassMethods,(NumVehicleClassMethods+1)==NumCarClassMethods);
+		assertTrue("veh:"+NumVehicleClassMethods+":car:"+NumCarClassMethods,
+				(NumVehicleClassMethods+1)==NumCarClassMethods);
 	}
 
 	@Test 
@@ -82,7 +83,8 @@ public class CarTests {
 		//Same as Vehicle 
 		final int NumVehicleClassFields = Array.getLength(Vehicle.class.getFields());
 		final int NumCarClassFields = Array.getLength(Car.class.getFields());
-		assertTrue("veh:"+NumVehicleClassFields+":car:"+NumCarClassFields,(NumVehicleClassFields)==NumCarClassFields);
+		assertTrue("veh:"+NumVehicleClassFields+":car:"+NumCarClassFields,
+				(NumVehicleClassFields)==NumCarClassFields);
 	}
 
 	@Test 
@@ -90,6 +92,7 @@ public class CarTests {
 		//Same as Vehicle
 		final int NumVehicleClassConstructors = Array.getLength(Vehicle.class.getConstructors());
 		final int NumCarClassConstructors = Array.getLength(Car.class.getConstructors());
-		assertTrue(":veh:"+NumVehicleClassConstructors+":car:"+NumCarClassConstructors,(NumVehicleClassConstructors)==NumCarClassConstructors);
+		assertTrue(":veh:"+NumVehicleClassConstructors+":car:"+NumCarClassConstructors,
+				(NumVehicleClassConstructors)==NumCarClassConstructors);
 	}
 }

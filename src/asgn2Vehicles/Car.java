@@ -32,9 +32,11 @@ public class Car extends Vehicle {
 	 */
 	public Car(String vehID, int arrivalTime, boolean small) throws VehicleException 
 	{
+		super(vehID, arrivalTime);
 		if(arrivalTime <= 0) //If arrival time is not strictly positive: throw an exception
 		{
-			throw new VehicleException("Vehicle Exception: Arrival Time is not strictly positive. Car was not created.");
+			throw new VehicleException("Vehicle Exception:"
+					+ " Arrival Time is not strictly positive. Car was not created.");
 		}
 		else //else: Assign vehicle parameters:
 		{
@@ -55,14 +57,11 @@ public class Car extends Vehicle {
 
 	/* (non-Javadoc)
 	 * @see asgn2Vehicles.Vehicle#toString()
-	 
+	 *
 	@Override
 	public String toString() 
 	{
-		return "Vehicle: Car | vehID: " + this.vehID + " | Small: " + (this.small) + " | Arrival Time: "
-				+ this.getArrivalTime() + " | Parking Time: " 
-				+ this.getParkingTime()	+ " | Departure Time: " + this.getDepartureTime()
-				+ " | Satisfied: " + this.isSatisfied();
+		return ((Vehicle) this).toString();
 	}
 	*/
 }

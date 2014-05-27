@@ -53,15 +53,15 @@ import org.jfree.ui.RefineryUtilities;
 public class ChartPanel extends ApplicationFrame {
 
      private String TITLE;
-     TimeSeriesCollection tsc;
-	 TimeSeries totalVehicles;
-	 TimeSeries parkedVehicles;
-	 TimeSeries parkedCars;
-	 TimeSeries parkedSmallCars;
-	 TimeSeries parkedMotorCycles;
-	 TimeSeries queuedVehicles;
-	 TimeSeries archivedVehicles;
-	 TimeSeries dissatisfiedVehicles;
+     private TimeSeriesCollection tsc;
+     private TimeSeries totalVehicles;
+     private TimeSeries parkedVehicles;
+     private TimeSeries parkedCars;
+     private TimeSeries parkedSmallCars;
+     private TimeSeries parkedMotorCycles;
+     private TimeSeries queuedVehicles;
+     private TimeSeries archivedVehicles;
+     private TimeSeries dissatisfiedVehicles;
 	 
     /**
      * Constructor shares the work with the run method. 
@@ -91,7 +91,7 @@ public class ChartPanel extends ApplicationFrame {
 	 * @return collection of time series for the plot 
 	 */
 	public void createLineChartData() {
-		tsc = new TimeSeriesCollection(); 	
+		 tsc = new TimeSeriesCollection(); 	
 		 totalVehicles = new TimeSeries("Total Vehicles to Date");
 		 parkedVehicles = new TimeSeries("Total Vehicles Parked");
 		 parkedCars = new TimeSeries("Total Cars Parked");
@@ -116,6 +116,8 @@ public class ChartPanel extends ApplicationFrame {
 		Matcher matcher = pattern.matcher(status);
 		if (matcher.find())
 		{
+			//I am so sorry for this wreck. HOURS of screwing this up, I went with this highly unprofessional
+			//Piece of code.
 			//Time
 			//Count
 			matcher.find();
@@ -189,14 +191,14 @@ public class ChartPanel extends ApplicationFrame {
     
     private CategoryDataset createBarColumnDataset(String status) {
         
-        // row keys...
+        //Rows
         final String series1 = "Total Cars Processed";
         final String series2 = "Total Cars Dissatisfied";
 
-        // column keys...
+        //Columns
         final String category1 = "";
 
-        // create the dataset...
+        //Data Set
         final DefaultCategoryDataset dataset = new DefaultCategoryDataset();
         
 		Pattern pattern = Pattern.compile("([0-9]+)");
@@ -231,7 +233,7 @@ public class ChartPanel extends ApplicationFrame {
      */
     private JFreeChart createChart(final CategoryDataset dataset) {
         
-        // create the chart...
+        //Create Chart
         final JFreeChart chart = ChartFactory.createBarChart(
             "Car Park Results",         // chart title
             "",               // domain axis label
@@ -239,26 +241,24 @@ public class ChartPanel extends ApplicationFrame {
             dataset,                  // data
             PlotOrientation.VERTICAL, // orientation
             true,                     // include legend
-            true,                     // tooltips?
+            true,                     // tooltips
             false                     // URLs?
         );
 
-        // NOW DO SOME OPTIONAL CUSTOMISATION OF THE CHART...
-
-        // set the background color for the chart...
+        //Background Colour
         chart.setBackgroundPaint(Color.white);
 
-        // get a reference to the plot for further customisation...
+        //Set more colours.
         final CategoryPlot plot = chart.getCategoryPlot();
         plot.setBackgroundPaint(Color.lightGray);
         plot.setDomainGridlinePaint(Color.white);
         plot.setRangeGridlinePaint(Color.white);
 
-        // set the range axis to display integers only...
+        //Set the axis to be integers.
         final NumberAxis rangeAxis = (NumberAxis) plot.getRangeAxis();
         rangeAxis.setStandardTickUnits(NumberAxis.createIntegerTickUnits());
 
-        // disable bar outlines...
+        //Make pretty bars.
         final BarRenderer renderer = (BarRenderer) plot.getRenderer();
         renderer.setDrawBarOutline(false);
 
@@ -266,23 +266,16 @@ public class ChartPanel extends ApplicationFrame {
         domainAxis.setCategoryLabelPositions(
             CategoryLabelPositions.createUpRotationLabelPositions(Math.PI / 6.0)
         );
-        // OPTIONAL CUSTOMISATION COMPLETED.
         
-        return chart;
-        
+        return chart;  
     }
-
-    /**
-     * Starting point for the demonstration application.
-     *
-     * @param args  ignored.
-     */
+ 
+    //Function to be called for Bar Chart
     public static void createBarChart(String status) {
+    	//This is a train wreck.
     	final ChartPanel barChart = new ChartPanel("Car Park Results", true ,status);
     	barChart.pack();
         RefineryUtilities.centerFrameOnScreen(barChart);
         barChart.setVisible(true);
-//
     }
-    //
 }

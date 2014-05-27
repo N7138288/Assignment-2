@@ -28,12 +28,12 @@ import asgn2Exceptions.VehicleException;
  *
  */
 public class SimulationRunner {
-	CarPark carPark;
+	public CarPark carPark; //To be used by Gui Simulator
 	private Simulator sim;
 	
 	private Log log;
 	
-	ChartPanel tsc;
+	public ChartPanel tsc; //To be used by Gui Simulator
 	
 	/**
 	 * Constructor just does initialisation 

@@ -83,8 +83,8 @@ public abstract class Vehicle {
 	}
 
 	// This stops the errors on the constructors for Car, Motor Cycle
-	public Vehicle() {
-	}
+	//public Vehicle() {
+	//}
 
 	/**
 	 * Transition vehicle to parked state (mutator) Parking starts on arrival or on exit from the queue, but time is set
@@ -107,14 +107,16 @@ public abstract class Vehicle {
 			// Throw exception and change state if so
 			correctState = false;
 			throw new VehicleException(
-					"Not in Correct state (required state: parked = queued = false). Vehicle has not entered parked state.");
+					"Not in Correct state (required state: parked = queued = false). "
+					+ "Vehicle has not entered parked state.");
 		}
 		if (intendedDuration < Constants.MINIMUM_STAY) // If intendedDuration is less then the minimum stay.
 		{
 			// Throw exception and change state
 			correctState = false;
 			throw new VehicleException(
-					"Vehicle Exception: Intended Duration less then the minimum stay. Vehicle has not entered parked state.");
+					"Vehicle Exception: Intended Duration less then the minimum stay. "
+					+ "Vehicle has not entered parked state.");
 		}
 		if (parkingTime < 0) // If parking time is strictly negative.
 		{
@@ -174,14 +176,16 @@ public abstract class Vehicle {
 			// Throw exception and change state
 			correctState = false;
 			throw new VehicleException(
-					"Vehicle Exception: Not in Correct state (currently queued). Vehicle has not exited the parked state.");
+					"Vehicle Exception: Not in Correct state (currently queued)."
+					+ " Vehicle has not exited the parked state.");
 		}
 		if (parked == false) // If the vehicle is not in a parked state.
 		{
 			// Throw exception and change state
 			correctState = false;
 			throw new VehicleException(
-					"Vehicle Exception: Not in Correct state (currently not parked). Vehicle has not exited the parked state.");
+					"Vehicle Exception: Not in Correct state (currently not parked). "
+					+ "Vehicle has not exited the parked state.");
 		}
 		if (departureTime < parkingTime) // If the time leaving the car park is before the time entering the car park:
 											// throw an exception
@@ -215,14 +219,16 @@ public abstract class Vehicle {
 			// Throw exception and change state
 			correctState = false;
 			throw new VehicleException(
-					"Vehicle Exception: Not in Correct state (currently parked). Vehicle has not exited the queued state.");
+					"Vehicle Exception: Not in Correct state (currently parked). "
+					+ "Vehicle has not exited the queued state.");
 		}
 		if (!queued) // If the vehicle is in a queued state.
 		{
 			// Throw exception and change state
 			correctState = false;
 			throw new VehicleException(
-					"Vehicle Exception: Not in Correct state (currently not queued). Vehicle has not exited the queued state.");
+					"Vehicle Exception: Not in Correct state (currently not queued)."
+					+ " Vehicle has not exited the queued state.");
 		}
 		if (exitTime < arrivalTime) // If the time leaving the queue is before the time entering the queue: 
 									//throw an exception.
@@ -330,7 +336,8 @@ public abstract class Vehicle {
 			status += "Queuing Time: " + (exitTime - arrivalTime) + "\n";
 			if (exitTime - arrivalTime > Constants.MAXIMUM_QUEUE_TIME)
 			{
-				status += "Exceeded maximum acceptable queuing time by: " + ((exitTime - arrivalTime) - Constants.MAXIMUM_QUEUE_TIME) + "\n";
+				status += "Exceeded maximum acceptable queuing time by: " + 
+			((exitTime - arrivalTime) - Constants.MAXIMUM_QUEUE_TIME) + "\n";
 			}
 		}
 		else

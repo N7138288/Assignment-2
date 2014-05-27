@@ -29,9 +29,11 @@ public class MotorCycle extends Vehicle {
 	
 	public MotorCycle(String vehID, int arrivalTime) throws VehicleException 
 	{
+		super(vehID, arrivalTime);
 		if(arrivalTime <= 0) //If Arrival time is not strictly positive: throw an exception.
 		{
-			throw new VehicleException("Vehicle Exception: Arrival Time is not strictly positive. Motor Cycle was not created.");
+			throw new VehicleException("Vehicle Exception: Arrival Time is not strictly positive."
+					+ " Motor Cycle was not created.");
 		}
 		else //Assign Vehicle parameters
 		{
@@ -46,10 +48,7 @@ public class MotorCycle extends Vehicle {
 	@Override
 	public String toString() 
 	{
-		return "Vehicle: Motor Cycle | vehID: " + this.vehID + " | Arrival Time: "
-				+ this.getArrivalTime() + " | Parking Time: " 
-				+ this.getParkingTime()	+ " | Departure Time: " + this.getDepartureTime()
-				+ " | Satisfied: " + this.isSatisfied();
+		return ((Vehicle) this).toString();
 	}
 	*/
 }

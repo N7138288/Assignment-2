@@ -219,24 +219,21 @@ public class CarParkTests {
 		Car notInitializedCar = null;
 		testCarPark.unparkVehicle(notInitializedCar, 150);
 	}	
-	
-	//Meant to throw vehicle except if in queue
-	
+		
 	//Check the exception thrown for trying to un-park a queued vehicle
 	@Test (expected = VehicleException.class)
 	public void vehicleQueueExceptUnparkVehicle() throws VehicleException, SimulationException {
-		testCarPark.enterQueue(carTest);
-		testCarPark.unparkVehicle(carTest, 150);
+		testCarPark.parkVehicle(carTest, 100, 100);
+		carTest.enterQueuedState();
+		testCarPark.unparkVehicle(carTest, 150); 
 	}
-	
-	//Vehicle is in car park but throws exception not in car park
-	
+		
 	//Test the exception when trying to un-park a vehicle that is in the car park but not parked
 	@Test (expected = VehicleException.class)
 	public void vehicleNotParkedExceptUnparkVehicle() throws VehicleException, SimulationException {
-		testCarPark.enterQueue(carTest);
-		carTest.exitQueuedState(120);
-		testCarPark.unparkVehicle(carTest, 150);
+		testCarPark.parkVehicle(carTest, 100, 100);
+		carTest.exitParkedState(300);
+		testCarPark.unparkVehicle(carTest, 100);
 	}
 	
 	/* CarParkTests.java */
