@@ -28,12 +28,12 @@ import asgn2Exceptions.VehicleException;
  *
  */
 public class SimulationRunner {
-	private CarPark carPark;
+	CarPark carPark;
 	private Simulator sim;
 	
 	private Log log;
 	
-	private ChartPanel tsc;
+	ChartPanel tsc;
 	
 	/**
 	 * Constructor just does initialisation 
@@ -46,7 +46,7 @@ public class SimulationRunner {
 		this.sim = sim;
 		this.log = log;
 		
-		this.tsc = new ChartPanel("Car Park Simulator");
+		this.tsc = new ChartPanel("Car Park Simulator", false, "");
 	}
 	
 	
@@ -61,7 +61,9 @@ public class SimulationRunner {
 		//Start chart
 		this.tsc.createLineChartData();
 		
-		//
+		//reset display
+		
+		GUISimulator.resetDisplay("");
 		this.log.initialEntry(this.carPark,this.sim);
 		for (int time=0; time<=Constants.CLOSING_TIME; time++) {
 			//queue elements exceed max waiting time
@@ -82,21 +84,19 @@ public class SimulationRunner {
 			if (newVehiclesAllowed(time)) { 
 				this.carPark.tryProcessNewVehicles(time,this.sim);
 			}
-			//Log progress 
+			
 			this.log.logEntry(time,this.carPark);
 			
 			//Chart progress
-			this.tsc.addLineChartData(time, this.carPark);
+			this.tsc.addLineChartData(time, this.carPark.getStatus(time));
 			
 			GUISimulator.appendDisplay(this.carPark.getStatus(time));
 		}
+		
 		this.log.finalise(this.carPark);
 		
 		//Finalise Chart
 		this.tsc.concludeLineChartData();
-		
-		//Show Chart
-		this.tsc.createLineChart();
 	}
 
 	/**
@@ -117,7 +117,6 @@ public class SimulationRunner {
         // Make the simulation visible
         mainFrame.setVisible(true);
         
-		//TODO: Implement Argument Processing 
 		//Task 3: allow command line components: All or Nothing.
 		//Step 1: Zero Arguments - not required
 		//Step 2: Ten Arguments

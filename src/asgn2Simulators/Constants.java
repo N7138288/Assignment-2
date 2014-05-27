@@ -23,16 +23,16 @@ public class Constants {
 	public static final int LAST_ENTRY = CLOSING_TIME-60;
 	
 	//RNG and Probs
-	public static /*final*/ int DEFAULT_SEED = 100; 
-	public static /*final*/ double DEFAULT_CAR_PROB = 1.0;
-	public static /*final*/ double DEFAULT_SMALL_CAR_PROB = 0.20;
-	public static /*final*/ double DEFAULT_MOTORCYCLE_PROB = 0.05;
-	public static /*final*/ double DEFAULT_INTENDED_STAY_MEAN = 120.0;
-	public static /*final*/ double DEFAULT_INTENDED_STAY_SD = 0.33*Constants.DEFAULT_INTENDED_STAY_MEAN;
+	public static final int DEFAULT_SEED = 100; 
+	public static final double DEFAULT_CAR_PROB = 1.0;
+	public static final double DEFAULT_SMALL_CAR_PROB = 0.20;
+	public static final double DEFAULT_MOTORCYCLE_PROB = 0.05;
+	public static final double DEFAULT_INTENDED_STAY_MEAN = 120.0;
+	public static final double DEFAULT_INTENDED_STAY_SD = 0.33*Constants.DEFAULT_INTENDED_STAY_MEAN;
 	
 	//Default Size parameters
-	public static /*final*/ int DEFAULT_MAX_CAR_SPACES = 100;
-	public static /*final*/ int DEFAULT_MAX_SMALL_CAR_SPACES = 20;
-	public static /*final*/ int DEFAULT_MAX_MOTORCYCLE_SPACES = 20;
-	public static /*final*/ int DEFAULT_MAX_QUEUE_SIZE = 10;
+	public static final int DEFAULT_MAX_CAR_SPACES = 100;
+	public static final int DEFAULT_MAX_SMALL_CAR_SPACES = 20;
+	public static final int DEFAULT_MAX_MOTORCYCLE_SPACES = 20;
+	public static final int DEFAULT_MAX_QUEUE_SIZE = 10;
 }

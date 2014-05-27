@@ -42,7 +42,7 @@ import asgn2Exceptions.SimulationException;
 @SuppressWarnings("serial")
 public class GUISimulator extends JFrame implements Runnable {
 	//Parameter Setup
-	
+	SimulationRunner sr;
 	// Display for simulation messages
 	private static JTextArea display;           
 	private JScrollPane textScrollPane; 
@@ -61,6 +61,8 @@ public class GUISimulator extends JFrame implements Runnable {
 	
 	//Start button
 	private JButton startButton;
+	private JButton lineGraph;
+	private JButton barChart;
 	private JPanel buttons;
 
 	// Places where we'll add components to a frame
@@ -86,7 +88,7 @@ public class GUISimulator extends JFrame implements Runnable {
 		this.setLayout(new GridBagLayout());
 		
 		// Create a scrollable text area for displaying instructions and messages
-		display = new JTextArea(20, 60); // lines by columns
+		display = new JTextArea(10, 40); // lines by columns
 		display.setEditable(false);
 		display.setLineWrap(true);
 		textScrollPane = new JScrollPane(display);
@@ -113,7 +115,14 @@ public class GUISimulator extends JFrame implements Runnable {
 		
 		// Button for starting the simulation
 		startButton = new JButton("Start");
+		lineGraph = new JButton("Show Line Graph");
+		barChart = new JButton("Show Bar Chart");
 		buttons.add(startButton);
+		buttons.add(lineGraph);
+		buttons.add(barChart);
+		lineGraph.setEnabled(false);
+		barChart.setEnabled(false);
+
 		startButton.addActionListener(new ActionListener() 
 		{   
           //Handle JButton event if Enter key is pressed or if mouse is clicked.  
@@ -123,13 +132,35 @@ public class GUISimulator extends JFrame implements Runnable {
           }
 		}
 		);
-
+		
+		lineGraph.addActionListener(new ActionListener() 
+		{   
+          //Handle JButton event if Enter key is pressed or if mouse is clicked.  
+          public void actionPerformed(ActionEvent event) 
+          {
+      		//Show Chart
+      		sr.tsc.createLineChart();
+    		lineGraph.setEnabled(false);
+          }
+		}
+		);
+		
+		barChart.addActionListener(new ActionListener() 
+		{   
+          //Handle JButton event if Enter key is pressed or if mouse is clicked.  
+          public void actionPerformed(ActionEvent event) 
+          {
+      		ChartPanel.createBarChart(sr.carPark.getStatus(Constants.CLOSING_TIME));
+    		barChart.setEnabled(false);
+      	  }
+		}
+		);
 	}
 	
 	/*
 	 * Convenience method for resetting the text in the display area
 	 */
-	private void resetDisplay(String initialText) {
+	public static void resetDisplay(String initialText) {
 		display.setText(initialText);
 	}
 
@@ -204,16 +235,16 @@ public class GUISimulator extends JFrame implements Runnable {
 		try
 		{
 			//Ensure correct type of data:
-			Constants.DEFAULT_SEED = Integer.parseInt(defaultSeedText.getText().trim());
-			Constants.DEFAULT_CAR_PROB = Double.parseDouble(defaultCarProbText.getText().trim());
-			Constants.DEFAULT_SMALL_CAR_PROB = Double.parseDouble(defaultSmallCarProbText.getText().trim());
-			Constants.DEFAULT_MOTORCYCLE_PROB = Double.parseDouble(defaultMotorCycleProbText.getText().trim());
-			Constants.DEFAULT_INTENDED_STAY_MEAN = Double.parseDouble(defaultIntendedMeanText.getText().trim());
-			Constants.DEFAULT_INTENDED_STAY_SD = Double.parseDouble(defaultIntendedSDText.getText().trim());
-			Constants.DEFAULT_MAX_CAR_SPACES = Integer.parseInt(defaultSpacesText.getText().trim());
-			Constants.DEFAULT_MAX_SMALL_CAR_SPACES = Integer.parseInt(defaultSmallSpacesText.getText().trim());
-			Constants.DEFAULT_MAX_MOTORCYCLE_SPACES = Integer.parseInt(defaultMotorCycleSpacesText.getText().trim());
-			Constants.DEFAULT_MAX_QUEUE_SIZE = Integer.parseInt(defaultMaxQueueText.getText().trim());
+			int defaultSeed = Integer.parseInt(defaultSeedText.getText().trim());
+			double carProb = Double.parseDouble(defaultCarProbText.getText().trim());
+			double smallCarProb = Double.parseDouble(defaultSmallCarProbText.getText().trim());
+			double motorCycleProb = Double.parseDouble(defaultMotorCycleProbText.getText().trim());
+			double intendedMean = Double.parseDouble(defaultIntendedMeanText.getText().trim());
+			double intendedSD = Double.parseDouble(defaultIntendedSDText.getText().trim());
+			int maxCarspaces = Integer.parseInt(defaultSpacesText.getText().trim());
+			int maxSmallCarSpaces = Integer.parseInt(defaultSmallSpacesText.getText().trim());
+			int maxMotorCycleSpaces = Integer.parseInt(defaultMotorCycleSpacesText.getText().trim());
+			int maxQueueSize = Integer.parseInt(defaultMaxQueueText.getText().trim());
 			
 			//Tests to ensure valid data:
 			/*
@@ -221,25 +252,25 @@ public class GUISimulator extends JFrame implements Runnable {
 			•	maxCarSpaces, maxMotorCycleSpaces, maxQueueSize >= 0
 			• 0 <= maxSmallCarSpaces <= maxCarSpaces
 			 */
-			if (Constants.DEFAULT_MAX_CAR_SPACES < 0)
+			if (maxCarspaces < 0)
 			{
 				throw new SimulationException("Maximum car spaces must be non-negative, given "
-						+ Constants.DEFAULT_MAX_CAR_SPACES);
+						+ maxCarspaces);
 			}
-			if (Constants.DEFAULT_MAX_MOTORCYCLE_SPACES < 0)
+			if (maxMotorCycleSpaces < 0)
 			{
 				throw new SimulationException("Maximum motor cycle spaces must be non-negative, given "
-						+ Constants.DEFAULT_MAX_MOTORCYCLE_SPACES);
+						+ maxMotorCycleSpaces);
 			}
-			if (Constants.DEFAULT_MAX_QUEUE_SIZE < 0)
+			if (maxQueueSize < 0)
 			{
 				throw new SimulationException("Maximum queue size must be non-negative, given "
 						+ Constants.DEFAULT_MAX_QUEUE_SIZE);
 			}
-			if ((Constants.DEFAULT_MAX_SMALL_CAR_SPACES < 0) || (Constants.DEFAULT_MAX_SMALL_CAR_SPACES > Constants.DEFAULT_MAX_CAR_SPACES))
+			if ((maxSmallCarSpaces < 0) || (maxSmallCarSpaces > maxCarspaces))
 			{
 				throw new SimulationException("Maximum small car spaces must be non-negative and less then the maximum car spaces, given "
-						+ Constants.DEFAULT_MAX_SMALL_CAR_SPACES);
+						+ maxSmallCarSpaces);
 			}
 			
 			//Disable things on successful run
@@ -254,8 +285,12 @@ public class GUISimulator extends JFrame implements Runnable {
 			defaultMotorCycleSpacesText.setEnabled(false);
 			defaultMaxQueueText.setEnabled(false);
 			startButton.setEnabled(false);
+			lineGraph.setEnabled(true);
+			barChart.setEnabled(true);
 			
-			run();
+			run(defaultSeed, carProb, smallCarProb,
+					motorCycleProb, intendedMean, intendedSD,
+					maxCarspaces, maxSmallCarSpaces, maxMotorCycleSpaces, maxQueueSize);
 
 		}	
 		catch (NumberFormatException exception) // User has entered an invalid number
@@ -267,27 +302,35 @@ public class GUISimulator extends JFrame implements Runnable {
 			appendDisplay(exception.getMessage() + "\n");
 		}
 	}
-
-	@Override
-	public void run() {
+	
+	public void run(int defaultSeed, double carProb, double smallCarProb,
+			double motorCycleProb, double intendedMean, double intendedSD,
+			int maxCarspaces, int maxSmallCarSpaces, int maxMotorCycleSpaces, int maxQueueSize) {
 		//Run the simulation 
-		CarPark cp = new CarPark();
+		CarPark cp = null;
 		Simulator s = null;
 		Log l = null; 
 		try {
-			s = new Simulator();
+			cp = new CarPark(maxCarspaces, maxSmallCarSpaces, maxMotorCycleSpaces, maxQueueSize);
+			s = new Simulator(defaultSeed, intendedMean, intendedSD, carProb, smallCarProb, motorCycleProb);
 			l = new Log();
 		} catch (IOException | SimulationException e1) {
 			e1.printStackTrace();
 			System.exit(-1);
 		}
 		
-		SimulationRunner sr = new SimulationRunner(cp,s,l);
+		sr = new SimulationRunner(cp,s,l);
 		try {
 			sr.runSimulation();
 		} catch (Exception e) {
 			e.printStackTrace();
 			System.exit(-1);
 		} 
+	}
+
+	@Override
+	public void run() {
+		// TODO Auto-generated method stub
+		
 	}
 }
